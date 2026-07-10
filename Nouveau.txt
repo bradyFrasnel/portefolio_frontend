@@ -1,0 +1,927 @@
+# DOCUMENTATION COMPLÈTE DU PROJET PORTFOLIO API
+# ===============================================
+# Généré le 24/03/2026 - Mis à jour le 28/03/2026 - Référence complète pour le développement frontend
+
+# ===============================================
+# 1. ARCHITECTURE GÉNÉRALE
+# ===============================================
+
+## Backend Django REST API
+- Framework: Django 6.0.2 + Django REST Framework 3.15.2
+- Base de données: Supabase (PostgreSQL cloud)
+- Déploiement: Render.com
+- Documentation API: Swagger/Redoc disponible
+- Authentification: **Token DRF (rest_framework.authtoken)** via `/api/admin/login/`
+
+## Frontend Vue.js
+- Framework: Vue.js 3 (beta) + Vite
+- UI: Tailwind CSS 3.4.19
+- Router: Vue Router 4.6.4
+- HTTP Client: Axios
+- Animations: AOS (Animate On Scroll)
+
+## Base de données Supabase
+- Provider: Supabase (PostgreSQL cloud)
+- Région: Europe (recommandée)
+- SSL: Obligatoire
+- Pooling: Activé (pooler)
+- Connection: aws-1-eu-west-1.pooler.supabase.com:6543
+- Backup: Automatique quotidien
+
+# ===============================================
+# 2. MODÈLES DE DONNÉES (Backend)
+# ===============================================
+
+## 2.1 User (Utilisateur personnalisé)
+```python
+class User(models.Model):
+    username = models.CharField(max_length=100, unique=True)
+    password = models.CharField(max_length=255)  # Hash SHA256
+    role = models.CharField(max_length=20, default='user', choices=[
+        ('admin', 'Admin'),
+        ('user', 'User')
+    ])
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = 'portfolio_users'
+    
+    def is_authenticated(self):
+        return True
+    
+    def is_staff(self):
+        return self.role == 'admin'
+```
+
+⚠️ IMPORTANT
+- L’authentification utilisée par l’admin **n’utilise plus ce modèle `portfolio.User`**.
+- L’admin utilise désormais **l’utilisateur Django** (`django.contrib.auth`, table `auth_user`) + **Token DRF**.
+- Le modèle `portfolio.User` peut rester pour d’autres usages, mais il n’est pas la source d’auth.
+
+## 2.2 Project (Projet)
+```python
+class Project(models.Model):
+    project_name = models.CharField(max_length=200, unique=True)
+    project_description = models.TextField()
+    technology_used = models.TextField(help_text="Technologies utilisées (séparées par des virgules)")
+    project_image = models.ImageField(upload_to="projects/main/", blank=True, null=True)
+    github_link = models.URLField(blank=True, null=True, help_text="Lien vers le repository GitHub")
+    demo_link = models.URLField(blank=True, null=True, help_text="Lien vers la démo en ligne")
+    date_creation = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date_creation']
+
+    def __str__(self):
+        return self.project_name
+```
+
+### 2.2bis Gestion des images (Cloudinary) — sélection “native” de fichier
+Le backend est configuré avec Cloudinary :
+- `DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'`
+- donc un `ImageField` est **automatiquement stocké sur Cloudinary**.
+
+➡️ Résultat : le frontend peut utiliser un `<input type="file">` et envoyer un **multipart/form-data**.
+
+#### Payload attendu pour créer un projet avec image
+- **Content-Type**: `multipart/form-data`
+- Champs texte: `project_name`, `project_description`, `technology_used`, `github_link` (optionnel), `demo_link` (optionnel)
+- Fichier: **`project_image`** (un fichier image)
+
+#### Exemple Vue/Vite (Axios + FormData)
+```js
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL, // ex: https://portefolio-backend-v0e0.onrender.com/api
+});
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("authToken");
+  if (token) config.headers.Authorization = `Token ${token}`;
+  return config;
+});
+
+export async function createProjectWithImage(form) {
+  const fd = new FormData();
+  fd.append("project_name", form.project_name);
+  fd.append("project_description", form.project_description);
+  fd.append("technology_used", form.technology_used);
+  if (form.github_link) fd.append("github_link", form.github_link);
+  if (form.demo_link) fd.append("demo_link", form.demo_link);
+  if (form.project_image_file) fd.append("project_image", form.project_image_file); // File
+
+  // IMPORTANT: ne pas fixer Content-Type manuellement, Axios met le boundary.
+  const res = await api.post("/projects/", fd);
+  return res.data;
+}
+```
+
+#### Exemple de composant (sélection fichier)
+```vue
+<input type="file" accept="image/*" @change="e => (file = e.target.files?.[0] ?? null)" />
+```
+
+#### Réponse API
+DRF renverra `project_image` sous forme d’URL Cloudinary (ou chemin) dans la réponse du projet.
+
+
+### 2.2bis Gestion de l’image (IMPORTANT)
+Dans ce backend, `project_image` est un **URLField** :
+- ✅ Le frontend doit envoyer **une URL** (ex: `https://.../image.jpg`)
+- ❌ Ce n’est pas un upload de fichier direct vers Django (pas de `multipart/form-data` attendu sur `/api/projects/`)
+
+#### Recommandation côté frontend
+1) Upload l’image vers un service (Cloudinary, Supabase Storage, etc.)
+2) Récupérer l’URL publique retournée
+3) Envoyer cette URL dans `project_image` lors du `POST /api/projects/`
+
+Payload attendu :
+```json
+{
+  "project_name": "Mon projet",
+  "project_description": "Description...",
+  "technology_used": "Vue, Django, Supabase",
+  "project_image": "https://res.cloudinary.com/<cloud>/image/upload/v123/mon-image.jpg",
+  "github_link": "https://github.com/...",
+  "demo_link": "https://..."
+}
+```
+
+## 2.3 Technology (Technologie)
+```python
+class Technology(models.Model):
+    nom = models.CharField(max_length=100, unique=True)
+    imageTechnologie = models.URLField(blank=True, null=True, help_text="URL de l'image/icone de la technologie")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.nom
+```
+
+# ===============================================
+# 3. ENDPOINTS API DISPONIBLES
+# ===============================================
+
+## Base URL: https://portefolio-backend-v0e0.onrender.com/api/
+
+### 3.1 Utilisateurs (/users/)
+- GET /api/users/                           # Lister tous les utilisateurs (debug)
+- POST /api/users/                          # Créer un utilisateur
+- GET /api/users/{id}/                      # Détail d'un utilisateur
+- DELETE /api/users/{id}/                   # Supprimer un utilisateur
+
+### 3.2 Projets (/projects/)
+- GET /api/projects/                           # Lister tous les projets
+- GET /api/projects/?page=2                    # Pagination
+- GET /api/projects/?search=django              # Rechercher
+- GET /api/projects/{id}/                       # Détail d'un projet
+- POST /api/projects/                           # Créer (admin seulement)
+- PUT /api/projects/{id}/                       # Modifier (admin seulement)
+- DELETE /api/projects/{id}/                    # Supprimer (admin seulement)
+
+### 3.3 Technologies (/technologies/)
+- GET /api/technologies/                        # Lister toutes les technologies
+- GET /api/technologies/{id}/                   # Détail d'une technologie
+- POST /api/technologies/                       # Créer (admin seulement)
+- PUT /api/technologies/{id}/                   # Modifier (admin seulement)
+- DELETE /api/technologies/{id}/                # Supprimer (admin seulement)
+
+### 3.4 Authentification Admin (/admin/)
+- POST /api/admin/login/                        # Connexion admin (Token DRF)
+
+# ===============================================
+# 4. SCHÉMAS DE RÉPONSES API
+# ===============================================
+
+## 4.1 Réponse Project (GET /api/projects/)
+```json
+{
+    "count": 10,
+    "next": "https://.../api/projects/?page=2",
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "project_name": "Portfolio API Backend",
+            "project_description": "API REST complète avec Django et Supabase",
+            "technology_used": "Django, Vue.js, Supabase, PostgreSQL",
+            "project_image": "https://example.com/image.jpg",
+            "github_link": "https://github.com/...",
+            "demo_link": "https://demo.example.com",
+            "date_creation": "2024-01-15T10:30:00Z"
+        }
+    ]
+}
+```
+
+## 4.1bis Erreurs de validation (400) lors de la création d’un projet
+Quand le frontend fait `POST /api/projects/`, Django REST Framework valide les champs via le serializer.
+Si un champ est invalide, l’API renvoie **HTTP 400** avec un objet d’erreurs par champ, par exemple :
+
+```json
+{
+  "project_name": [
+    "Ce champ est obligatoire."
+  ]
+}
+```
+
+Erreurs fréquentes sur `project_name` :
+- champ vide / manquant
+- **doublon** (le champ est `unique=True` dans le modèle)
+- longueur > 200 caractères
+
+Erreurs fréquentes sur `project_image` :
+- pas un fichier image
+- champ envoyé en JSON au lieu de multipart (ex: tu envoies une string)
+- fichier trop gros (selon limites Cloudinary / réseau)
+
+## 4.2 Réponse Technology (GET /api/technologies/)
+```json
+[
+    {
+        "id": 1,
+        "nom": "Django",
+        "imageTechnologie": "https://example.com/django-icon.png",
+        "created_at": "2024-01-15T10:30:00Z"
+    },
+    {
+        "id": 2,
+        "nom": "Vue.js",
+        "imageTechnologie": "https://example.com/vue-icon.png",
+        "created_at": "2024-01-15T10:30:00Z"
+    }
+]
+```
+
+## 4.3 Création d'utilisateur (POST /api/users/)
+```json
+{
+    "success": true,
+    "message": "Utilisateur créé avec succès",
+    "user": {
+        "id": 1,
+        "username": "Brady",
+        "role": "admin",
+        "created_at": "2024-03-28T12:00:00Z"
+    }
+}
+```
+
+## 4.4 Authentification Admin (POST /api/admin/login/)
+```json
+{
+    "success": true,
+    "message": "Authentification réussie",
+    "user": {
+        "username": "BradyAdmin",
+        "is_staff": true
+    },
+    "token": "a1b2c3d4e5f6..." 
+}
+```
+
+## 4.5 Erreur d'authentification
+```json
+{
+    "success": false,
+    "message": "Identifiants invalides ou utilisateur non autorisé"
+}
+```
+
+# ===============================================
+# 5. SYSTÈME D'AUTHENTIFICATION
+# ===============================================
+
+## 5.1 Architecture d'authentification
+- **Admin Django**: utilisateur Django standard (`auth_user`) avec `is_staff=True`
+- **Token DRF**: `rest_framework.authtoken` (persistant, non-expirant par défaut)
+- **Stateless**: le frontend envoie le token dans `Authorization`
+
+## 5.2 Flux d'authentification
+1. **Création admin (Render)**: au déploiement, `create_admin.py` crée/maj un admin Django à partir des variables Render :
+   - `ADMIN_USERNAME=BradyAdmin`
+   - `ADMIN_PASSWORD=Admin@1234`
+   - (optionnel) `ADMIN_EMAIL=...`
+2. **Connexion**: `POST /api/admin/login/` avec `username/password`
+3. **Token**: Token DRF retourné (et réutilisé si déjà existant)
+4. **Utilisation**: **obligatoire** sur les endpoints d’écriture (POST/PUT/DELETE)
+
+## 5.3 Sécurité implémentée
+- **Hash SHA256**: `hashlib.sha256(password.encode()).hexdigest()`
+- **Validation**: Champ password requis dans le serializer
+- **Rôle vérifié**: Seuls les `admin` peuvent se connecter
+- **Token unique**: UUID4 généré à chaque connexion
+
+## 5.4 Exemple d'utilisation dans Vue.js
+```javascript
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL, // ex: https://portefolio-backend-v0e0.onrender.com/api
+  headers: { "Content-Type": "application/json" },
+});
+
+// 1) Login admin -> récupère token DRF
+export async function adminLogin(credentials) {
+  const res = await api.post("/admin/login/", credentials); // {username, password}
+  if (res.data?.success && res.data?.token) {
+    localStorage.setItem("authToken", res.data.token);
+  }
+  return res.data;
+}
+
+// 2) Injecter automatiquement le token sur les requêtes
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("authToken");
+  if (token) {
+    // IMPORTANT: format DRF TokenAuth
+    config.headers.Authorization = `Token ${token}`;
+  }
+  return config;
+});
+
+// 3) Créer un projet (requiert Authorization: Token ...)
+export function createProject(payload) {
+  return api.post("/projects/", payload);
+}
+```
+
+### 5.5 Endpoints qui nécessitent le token
+- **Public (pas de token)**:
+  - `GET /api/projects/`
+  - `GET /api/technologies/`
+- **Protégés (token obligatoire)**:
+  - `POST/PUT/DELETE /api/projects/`
+  - `POST/PUT/DELETE /api/technologies/`
+
+### 5.6 Erreurs fréquentes côté frontend (Token)
+- **403 "Vous n'avez pas la permission..."**: token absent/mal formé (tu dois envoyer `Authorization: Token ...`)
+- **401**: mauvais `username/password` sur `/api/admin/login/`
+
+# ===============================================
+# 6. CONFIGURATION FRONTEND
+# ===============================================
+
+## 6.1 Variables d'environnement
+```bash
+# Supabase Configuration (2026)
+NEXT_PUBLIC_SUPABASE_URL=https://arokmijbfsjfldgejoeg.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your-publishable-key-here
+
+# Backend Django Variables
+SUPABASE_URL=https://arokmijbfsjfldgejoeg.supabase.co
+SUPABASE_ANON_KEY=your-anon-key-here
+SUPABASE_DB_PASSWORD=your-database-password-here
+SUPABASE_DB_HOST=aws-1-eu-west-1.pooler.supabase.com
+SUPABASE_DB_PORT=6543
+
+# Django Configuration
+SECRET_KEY=votre-secret-key
+DEBUG=False
+ALLOWED_HOSTS=portefolio-backend-v0e0.onrender.com
+
+# Cloudinary Configuration
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+```
+
+## 6.2 Service API (src/services/api.js)
+```javascript
+import axios from 'axios'
+
+const API_BASE_URL = 'https://portefolio-backend-v0e0.onrender.com/api'
+
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  withCredentials: false // Pas de cookies Django - token based
+})
+
+// Intercepteur pour ajouter le token
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('authToken')
+  if (token) {
+    // IMPORTANT (Option A / DRF TokenAuthentication)
+    config.headers.Authorization = `Token ${token}`
+  }
+  return config
+})
+
+export default {
+  // Authentification
+  createUser(userData) {
+    return api.post('/users/', userData)
+  },
+  
+  adminLogin(credentials) {
+    return api.post('/admin/login/', credentials)
+  },
+
+  // Projets
+  getProjects(page = 1, search = '') {
+    const params = new URLSearchParams({
+      page,
+      ...(search && { search })
+    })
+    return api.get(`/projects/?${params}`)
+  },
+  
+  getProject(id) {
+    return api.get(`/projects/${id}/`)
+  },
+
+  createProject(data) {
+    return api.post('/projects/', {
+      project_name: data.project_name,
+      project_description: data.project_description,
+      technology_used: data.technology_used,
+      project_image: data.project_image,
+      github_link: data.github_link,
+      demo_link: data.demo_link
+    })
+  },
+
+  updateProject(id, data) {
+    return api.put(`/projects/${id}/`, {
+      project_name: data.project_name,
+      project_description: data.project_description,
+      technology_used: data.technology_used,
+      project_image: data.project_image,
+      github_link: data.github_link,
+      demo_link: data.demo_link
+    })
+  },
+
+  deleteProject(id) {
+    return api.delete(`/projects/${id}/`)
+  },
+  
+  // Technologies  
+  getTechnologies() {
+    return api.get('/technologies/')
+  },
+
+  createTechnology(data) {
+    return api.post('/technologies/', {
+      nom: data.nom,
+      imageTechnologie: data.imageTechnologie
+    })
+  },
+
+  updateTechnology(id, data) {
+    return api.put(`/technologies/${id}/`, {
+      nom: data.nom,
+      imageTechnologie: data.imageTechnologie
+    })
+  },
+
+  deleteTechnology(id) {
+    return api.delete(`/technologies/${id}/`)
+  }
+}
+```
+
+## 6.3 Store d'authentification (src/stores/auth.js)
+```javascript
+import { ref } from 'vue'
+import api from '../services/api.js'
+
+export const useAuthStore = () => {
+  const user = ref(null)
+  const token = ref(localStorage.getItem('authToken'))
+  const isAuthenticated = ref(!!token.value)
+
+  const login = async (credentials) => {
+    try {
+      const response = await api.adminLogin(credentials)
+      if (response.data.success) {
+        user.value = response.data.user
+        token.value = response.data.token
+        isAuthenticated.value = true
+        localStorage.setItem('authToken', token.value)
+        return true
+      }
+      return false
+    } catch (error) {
+      console.error('Erreur de connexion:', error)
+      return false
+    }
+  }
+
+  const logout = () => {
+    user.value = null
+    token.value = null
+    isAuthenticated.value = false
+    localStorage.removeItem('authToken')
+  }
+
+  return {
+    user,
+    token,
+    isAuthenticated,
+    login,
+    logout
+  }
+}
+```
+
+# ===============================================
+# 7. COMPOSANTS FRONTEND RECOMMANDÉS
+# ===============================================
+
+## 7.1 Structure des composants
+```
+src/
+├── components/
+│   ├── common/
+│   │   ├── Header.vue
+│   │   ├── Footer.vue
+│   │   ├── LoadingSpinner.vue
+│   │   └── ErrorMessage.vue
+│   ├── portfolio/
+│   │   ├── ProjectCard.vue
+│   │   ├── ProjectModal.vue
+│   │   ├── ProjectFilter.vue
+│   │   └── ProjectGallery.vue
+│   ├── contact/
+│   │   ├── ContactForm.vue
+│   │   └── ContactSuccess.vue
+│   └── admin/
+│       ├── LoginForm.vue
+│       ├── ProjectForm.vue
+│       └── MessageList.vue
+├── views/
+│   ├── Home.vue (SPA complète)
+│   └── Admin.vue
+├── services/
+│   └── api.js
+├── stores/
+│   └── auth.js
+└── router/
+    └── index.js
+```
+
+## 7.2 Composant LoginForm.vue (Admin)
+```vue
+<template>
+  <div class="min-h-screen flex items-center justify-center bg-obsidian">
+    <div class="bg-dark-jungle p-8 rounded-xl border border-gray-800 w-full max-w-md">
+      <h2 class="text-2xl font-bold text-off-white mb-6 text-center">Connexion Admin</h2>
+      
+      <form @submit.prevent="handleLogin" class="space-y-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-custom mb-2">Nom d'utilisateur</label>
+          <input 
+            v-model="form.username" 
+            type="text" 
+            required
+            class="w-full px-4 py-3 bg-dark-jungle border border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald text-off-white"
+            placeholder="admin"
+          >
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-custom mb-2">Mot de passe</label>
+          <input 
+            v-model="form.password" 
+            type="password" 
+            required
+            class="w-full px-4 py-3 bg-dark-jungle border border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald text-off-white"
+            placeholder="••••••••"
+          >
+        </div>
+
+        <div v-if="error" class="bg-red-500/20 border border-red-500 text-red-400 px-4 py-3 rounded-lg">
+          {{ error }}
+        </div>
+
+        <button 
+          type="submit" 
+          :disabled="loading"
+          class="w-full bg-emerald text-obsidian px-6 py-3 rounded-lg hover:bg-neon-lime transition-all font-semibold disabled:opacity-50"
+        >
+          {{ loading ? 'Connexion...' : 'Se connecter' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth.js'
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+const loading = ref(false)
+const error = ref('')
+const form = ref({
+  username: '',
+  password: ''
+})
+
+const handleLogin = async () => {
+  loading.value = true
+  error.value = ''
+  
+  try {
+    const success = await authStore.login(form.value)
+    if (success) {
+      router.push('/admin')
+    } else {
+      error.value = 'Identifiants invalides'
+    }
+  } catch (err) {
+    error.value = 'Erreur de connexion'
+  } finally {
+    loading.value = false
+  }
+}
+</script>
+```
+
+# ===============================================
+# 8. DESIGN SYSTÈME (Tailwind CSS)
+# ===============================================
+
+## 8.1 Palette de couleurs
+```css
+/* Colors personnalisés */
+obsidian: #0a0a0a      /* Fond principal */
+dark-jungle: #121e16   /* Fond secondaire */
+emerald: #10b981       /* Primaire */
+neon-lime: #d9f99d     /* Accent clair */
+off-white: #f9f9f9     /* Texte principal */
+gray-custom: #9ca3af   /* Texte secondaire */
+```
+
+## 8.2 Typographie
+```css
+font-family: {
+  inter: ['Inter', 'sans-serif'],    /* Textes */
+  mono: ['JetBrains Mono', 'monospace'] /* Code */
+}
+```
+
+## 8.3 Dark Mode
+- Activé par classe: `dark`
+- Navigation: Toggle avec icône 🌙/☀️
+- Persistance: localStorage
+
+# ===============================================
+# 9. ADMINISTRATION
+# ===============================================
+
+## 9.1 Identifiants Admin
+- Username: BradyAdmin
+- Password: Admin@1234
+- URL Admin Vue.js: http://localhost:5173/admin
+- Token: Token DRF (persistant) retourné par `/api/admin/login/`
+
+## 9.2 Fonctionnalités Admin
+- Création/Modification/Suppression de projets
+- Gestion des technologies
+- Upload d'images via URLs
+- Authentification par token
+
+## 9.3 Création d'utilisateur admin via Postman
+```bash
+# L’admin est créé automatiquement sur Render via variables d’environnement.
+# En local, utilise plutôt: python manage.py createsuperuser
+```
+
+## 9.4 Connexion admin via Postman
+```bash
+# POST /api/admin/login/
+{
+    "username": "BradyAdmin",
+    "password": "Admin@1234"
+}
+```
+
+## 9.5 Utilisation du token (Postman / curl)
+- Header obligatoire sur les endpoints d’écriture :
+  - `Authorization: Token <token>`
+
+Exemple curl :
+```bash
+curl -X POST "https://portefolio-backend-v0e0.onrender.com/api/projects/" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Token <token>" \
+  -d '{"project_name":"Test","project_description":"...","technology_used":"Django","project_image":"https://...","github_link":null,"demo_link":null}'
+```
+
+# ===============================================
+# 10. DÉPLOIEMENT
+# ===============================================
+
+## 10.1 Backend (Render.com)
+```bash
+# Variables d'environnement Render
+DATABASE_URL=postgresql://...
+SECRET_KEY=votre-secret-key
+DEBUG=False
+ALLOWED_HOSTS=portefolio-backend-v0e0.onrender.com
+CLOUDINARY_URL=cloudinary://...
+```
+
+## 10.2 Frontend (Vercel recommandé)
+```bash
+# Variables d'environnement Vercel
+VITE_API_URL=https://portefolio-backend-v0e0.onrender.com/api
+```
+
+## 10.3 Build Commands
+```bash
+# Backend
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py collectstatic --noinput
+gunicorn config.wsgi:application
+
+# Frontend
+npm install
+npm run build
+```
+
+# ===============================================
+# 11. BONNES PRATIQUES
+# ===============================================
+
+## 11.1 Performance
+- Lazy loading des images
+- Pagination pour les listes
+- Mise en cache des réponses API
+- Optimisation des assets (Vite)
+
+## 11.2 SEO
+- Meta tags dynamiques
+- Structured data (JSON-LD)
+- Sitemap automatique
+- URLs SEO-friendly (slugs)
+
+## 11.3 Sécurité
+- HTTPS obligatoire
+- Token-based authentication
+- Validation des entrées
+- Sanitization des données
+- Hash SHA256 pour les mots de passe
+
+## 11.4 Accessibilité
+- Alt text pour les images
+- ARIA labels
+- Navigation clavier
+- Contrastes WCAG
+
+# ===============================================
+# 12. DÉBOGAGE ET TESTS
+# ===============================================
+
+## 12.1 Outils de développement
+- Console browser pour les logs API
+- Network tab pour vérifier les requêtes
+- Vue DevTools
+- Postman pour tester les endpoints
+
+## 12.2 Tests recommandés
+```javascript
+// Tests frontend avec Cypress/Vitest
+describe('Portfolio Auth', () => {
+  it('should login admin', () => {
+    cy.visit('/admin/login')
+    cy.get('[data-cy=username]').type('admin')
+    cy.get('[data-cy=password]').type('brady@1234')
+    cy.get('[data-cy=login-btn]').click()
+    cy.url().should('include', '/admin')
+  })
+  
+  it('should create project when authenticated', () => {
+    cy.window().then((win) => {
+      win.localStorage.setItem('authToken', 'fake-token')
+    })
+    cy.visit('/admin')
+    cy.get('[data-cy=project-form]').submit()
+    cy.get('[data-cy=success-message]').should('be.visible')
+  })
+})
+```
+
+## 12.3 Erreurs communes
+- CORS: Vérifier withCredentials: false
+- 401/403: Vérifier token Authorization header
+- 404: Vérifier URLs et slugs
+- 500: Vérifier logs backend
+- Token expiré: Reconnexion nécessaire
+
+# ===============================================
+# 13. CONFIGURATION SPÉCIFIQUE DÉJANGO
+# ===============================================
+
+## 13.1 Apps désactivées pour simplifier
+```python
+# Apps Django désactivées
+# 'django.contrib.auth'      # Utilise notre modèle User
+# 'django.contrib.contenttypes' # Pas besoin
+# 'django.contrib.sessions'   # Token-based auth
+# 'rest_framework.authtoken'  # Token UUID4 personnalisé
+```
+
+## 13.2 Middleware simplifié
+```python
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+```
+
+## 13.3 Permissions DRF
+```python
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # Géré dans les vues
+    ],
+}
+```
+
+# ===============================================
+# 14. RÉFÉRENCES RAPIDES
+# ===============================================
+
+## 14.1 URLs importantes
+- Backend API: https://portefolio-backend-v0e0.onrender.com/api/
+- Documentation: https://portefolio-backend-v0e0.onrender.com/docs/
+- Supabase Dashboard: https://app.supabase.com/
+
+## 14.2 Commandes utiles
+```bash
+# Backend
+python manage.py runserver
+python manage.py migrate
+python manage.py collectstatic
+
+# Frontend
+npm run dev
+npm run build
+npm run preview
+```
+
+## 14.3 Structure finale
+```
+portfolio-project/
+├── backend/          # Django API
+│   ├── config/       # Settings Django
+│   ├── portfolio/    # App principale
+│   ├── requirements.txt
+│   └── manage.py
+├── frontend/         # Vue.js SPA
+│   ├── src/
+│   │   ├── components/
+│   │   ├── views/
+│   │   ├── services/
+│   │   ├── stores/
+│   │   └── router/
+│   ├── package.json
+│   └── vite.config.js
+└── docs/            # Documentation
+```
+
+# ===============================================
+# 15. RÉSUMÉ DE L'AUTHENTIFICATION
+# ===============================================
+
+## 15.1 Points clés de l'implémentation
+- ✅ **Modèle User simplifié**: Pas d'héritage Django
+- ✅ **Hash SHA256**: Sécurité des mots de passe
+- ✅ **Token UUID4**: Simple et efficace
+- ✅ **Stateless**: Pas de session côté serveur
+- ✅ **Compatible**: Facile à intégrer avec Vue.js
+- ✅ **Postman testé**: Création et connexion fonctionnelles
+
+## 15.2 Flux complet
+1. **Création admin**: POST /api/users/ → Hash SHA256 → Sauvegarde
+2. **Connexion**: POST /api/admin/login/ → Vérification hash → Token UUID4
+3. **Utilisation**: Token dans header Authorization → Accès aux endpoints protégés
+
+## 15.3 Pour Vue.js
+- Stocker le token dans localStorage
+- Ajouter le token dans les headers Axios
+- Gérer l'état d'authentification dans un store
+- Rediriger selon le statut auth
+
+# ===============================================
+# FIN DE DOCUMENTATION
+# ===============================================
+# Ce document est votre référence complète pour développer
+# et maintenir le projet portfolio avec authentification.
+# Mis à jour le 28/03/2026 avec le système d'authentification complet.
+# ===============================================
