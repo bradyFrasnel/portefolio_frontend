@@ -44,23 +44,23 @@
     <!-- Hero Section -->
     <section id="hero" class="min-h-screen flex items-center justify-center px-4 pt-16">
       <div class="text-center max-w-4xl">
-        <h1 class="text-5xl md:text-7xl font-bold mb-6">
+        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6">
           <span class="text-emerald">Développeur</span><br>
           <span class="text-off-white">Web junior</span>
         </h1>
-        <p class="text-xl md:text-2xl text-gray-custom mb-8">
+        <p class="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-custom mb-6 sm:mb-8">
           Création d'applications web modernes avec des technologies de pointes
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
           <button 
             @click="scrollToSection('portfolio')"
-            class="bg-emerald text-obsidian px-8 py-3 rounded-lg hover:bg-neon-lime transition-all transform hover:scale-105 font-semibold"
+            class="bg-emerald text-obsidian px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base rounded-lg hover:bg-neon-lime transition-all transform hover:scale-105 font-semibold"
           >
             Voir mes projets
           </button>
           <button 
             @click="scrollToSection('contact')"
-            class="border border-emerald text-emerald px-8 py-3 rounded-lg hover:bg-emerald hover:text-obsidian transition-all font-semibold"
+            class="border border-emerald text-emerald px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base rounded-lg hover:bg-emerald hover:text-obsidian transition-all font-semibold"
           >
             Me contacter
           </button>
@@ -81,26 +81,26 @@
     <!-- Portfolio Section -->
     <section id="portfolio" class="py-20 px-4">
       <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl md:text-5xl font-bold text-off-white mb-6">Projets réalisés</h2>
-          <p class="text-xl text-gray-custom">Découvrez mes réalisations récentes</p>
+        <div class="text-center mb-8 sm:mb-16 px-2 sm:px-0">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-off-white mb-4 sm:mb-6">Projets réalisés</h2>
+          <p class="text-base sm:text-xl text-gray-custom">Découvrez mes réalisations récentes</p>
         </div>
 
         <!-- Filtres (supprimés pour simplification) -->
 
-        <!-- Projets Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Projets Grid - Centré -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
           <div 
             v-for="project in filteredProjects" 
             :key="project.id"
-            class="bg-dark-jungle p-6 rounded-xl border border-gray-800 hover:border-emerald transition-all cursor-pointer"
+            class="bg-dark-jungle p-6 rounded-xl border border-gray-800 hover:border-emerald transition-all cursor-pointer w-full"
             @click="showProjectDetail(project)"
             data-aos="fade-up"
           >
             <img 
               :src="project.image_url || project.project_image" 
               :alt="project.project_name"
-              class="w-full h-48 object-cover rounded-lg mb-4"
+              class="w-full h-32 sm:h-40 md:h-48 object-cover rounded-lg mb-4"
               @error="(e) => e.target.src = 'https://via.placeholder.com/400x225?text=Projet'"
             >
             <h3 class="text-xl font-semibold mb-2 text-off-white">{{ project.project_name }}</h3>
@@ -124,21 +124,21 @@
           <p class="text-xl text-gray-custom">Des solutions sur mesure pour votre entreprise</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="text-center p-8" data-aos="fade-up" data-aos-delay="100">
-            <div class="text-5xl mb-6">�</div>
-            <h3 class="text-2xl font-semibold mb-4 text-emerald">Développement Web</h3>
-            <p class="text-gray-custom">Sites vitrines, applications web, plateformes e-commerce</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div class="text-center p-4 sm:p-6 md:p-8" data-aos="fade-up" data-aos-delay="100">
+            <div class="text-4xl sm:text-5xl mb-3 sm:mb-6">🖥️</div>
+            <h3 class="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-4 text-emerald">Développement Web</h3>
+            <p class="text-sm sm:text-base text-gray-custom">Sites vitrines, applications web, plateformes e-commerce</p>
           </div>
-          <div class="text-center p-8" data-aos="fade-up" data-aos-delay="200">
-            <div class="text-5xl mb-6">🤖</div>
-            <h3 class="text-2xl font-semibold mb-4 text-emerald">Automatisation</h3>
-            <p class="text-gray-custom">Scripts Python, web scraping, traitement de données</p>
+          <div class="text-center p-4 sm:p-6 md:p-8" data-aos="fade-up" data-aos-delay="200">
+            <div class="text-4xl sm:text-5xl mb-3 sm:mb-6">🤖</div>
+            <h3 class="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-4 text-emerald">Automatisation</h3>
+            <p class="text-sm sm:text-base text-gray-custom">Scripts Python, web scraping, traitement de données</p>
           </div>
-          <div class="text-center p-8" data-aos="fade-up" data-aos-delay="300">
-            <div class="text-5xl mb-6">🔧</div>
-            <h3 class="text-2xl font-semibold mb-4 text-emerald">Maintenance</h3>
-            <p class="text-gray-custom">Audit, optimisation, corrections de bugs</p>
+          <div class="text-center p-4 sm:p-6 md:p-8" data-aos="fade-up" data-aos-delay="300">
+            <div class="text-4xl sm:text-5xl mb-3 sm:mb-6">🔧</div>
+            <h3 class="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-4 text-emerald">Maintenance</h3>
+            <p class="text-sm sm:text-base text-gray-custom">Audit, optimisation, corrections de bugs</p>
           </div>
         </div>
       </div>
@@ -160,7 +160,7 @@
                 v-model="contactForm.nom"
                 type="text"
                 required
-                class="w-full px-4 py-3 bg-dark-jungle border border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald text-off-white"
+                class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-dark-jungle border border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald text-off-white text-sm sm:text-base"
                 placeholder="Votre nom"
               />
             </div>
@@ -170,7 +170,7 @@
                 v-model="contactForm.email"
                 type="email"
                 required
-                class="w-full px-4 py-3 bg-dark-jungle border border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald text-off-white"
+                class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-dark-jungle border border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald text-off-white text-sm sm:text-base"
                 placeholder="votre@email.com"
               />
             </div>
@@ -181,7 +181,7 @@
             <select
               v-model="contactForm.type_projet"
               required
-              class="w-full px-4 py-3 bg-dark-jungle border border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald text-off-white"
+              class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-dark-jungle border border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald text-off-white text-sm sm:text-base"
             >
               <option value="">Sélectionnez...</option>
               <option value="Site vitrine">Site vitrine</option>
@@ -197,7 +197,7 @@
               v-model="contactForm.message"
               required
               rows="6"
-              class="w-full px-4 py-3 bg-dark-jungle border border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald text-off-white"
+              class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-dark-jungle border border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald text-off-white text-sm sm:text-base"
               placeholder="Décrivez votre projet..."
             ></textarea>
           </div>
@@ -206,7 +206,7 @@
             <button
               type="submit"
               :disabled="loading"
-              class="bg-emerald text-obsidian px-8 py-3 rounded-lg hover:bg-neon-lime transition-all transform hover:scale-105 font-semibold disabled:opacity-50"
+              class="bg-emerald text-obsidian px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base rounded-lg hover:bg-neon-lime transition-all transform hover:scale-105 font-semibold disabled:opacity-50"
             >
               <span v-if="!loading">Envoyer le message</span>
               <span v-else>Envoi en cours...</span>
@@ -222,22 +222,23 @@
 
     <!-- Identifiants Section -->
     <section id="identifiants" class="py-20 px-4 bg-dark-jungle">
-      <div class="max-w-4xl mx-auto">
+      <div class="max-w-7xl mx-auto">
         <div class="text-center mb-16">
           <h2 class="text-4xl md:text-5xl font-bold text-off-white mb-6">Identifiants Personnel</h2>
           <p class="text-xl text-gray-custom">Retrouvez-moi sur les plateformes professionnelles</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Cartes Identifiants - Centrées -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
           <!-- GitHub -->
-          <div class="text-center p-6 bg-obsidian rounded-xl border border-gray-800 hover:border-emerald transition-all" data-aos="fade-up" data-aos-delay="100">
-            <div class="text-5xl mb-4">🐙</div>
+          <div class="text-center p-6 bg-obsidian rounded-xl border border-gray-800 hover:border-emerald transition-all w-full" data-aos="fade-up" data-aos-delay="100">
+            <img src="@/assets/icones/github.png" alt="GitHub" class="h-16 w-16 mx-auto mb-4 object-contain">
             <h3 class="text-xl font-semibold mb-3 text-emerald">GitHub</h3>
             <p class="text-gray-custom mb-4">Mon portfolio de projets open source</p>
             <a 
               href="https://github.com/bradyFrasnel" 
               target="_blank"
-              class="inline-flex items-center gap-2 bg-emerald text-obsidian px-6 py-2 rounded-lg hover:bg-neon-lime transition-all font-semibold"
+              class="inline-flex items-center gap-2 bg-emerald text-obsidian px-4 sm:px-6 py-2 text-sm sm:text-base rounded-lg hover:bg-neon-lime transition-all font-semibold"
             >
               <span>Voir GitHub</span>
               <span>→</span>
@@ -245,14 +246,14 @@
           </div>
 
           <!-- LinkedIn -->
-          <div class="text-center p-6 bg-obsidian rounded-xl border border-gray-800 hover:border-emerald transition-all" data-aos="fade-up" data-aos-delay="200">
-            <div class="text-5xl mb-4">💼</div>
+          <div class="text-center p-6 bg-obsidian rounded-xl border border-gray-800 hover:border-emerald transition-all w-full" data-aos="fade-up" data-aos-delay="200">
+            <img src="@/assets/icones/linkedin.png" alt="LinkedIn" class="h-16 w-16 mx-auto mb-4 object-contain">
             <h3 class="text-xl font-semibold mb-3 text-emerald">LinkedIn</h3>
             <p class="text-gray-custom mb-4">Mon profil professionnel et expériences</p>
             <a 
               href="https://linkedin.com/in/brady-frasnel" 
               target="_blank"
-              class="inline-flex items-center gap-2 bg-emerald text-obsidian px-6 py-2 rounded-lg hover:bg-neon-lime transition-all font-semibold"
+              class="inline-flex items-center gap-2 bg-emerald text-obsidian px-4 sm:px-6 py-2 text-sm sm:text-base rounded-lg hover:bg-neon-lime transition-all font-semibold"
             >
               <span>Voir LinkedIn</span>
               <span>→</span>
@@ -260,15 +261,30 @@
           </div>
 
           <!-- Email -->
-          <div class="text-center p-6 bg-obsidian rounded-xl border border-gray-800 hover:border-emerald transition-all" data-aos="fade-up" data-aos-delay="300">
-            <div class="text-5xl mb-4">📧</div>
+          <div class="text-center p-6 bg-obsidian rounded-xl border border-gray-800 hover:border-emerald transition-all w-full" data-aos="fade-up" data-aos-delay="300">
+            <img src="@/assets/icones/mail.png" alt="Email" class="h-16 w-16 mx-auto mb-4 object-contain">
             <h3 class="text-xl font-semibold mb-3 text-emerald">Email</h3>
             <p class="text-gray-custom mb-4">Contact direct pour vos projets</p>
             <a 
               href="mailto:mokumabrady13@gmail.com" 
-              class="inline-flex items-center gap-2 bg-emerald text-obsidian px-6 py-2 rounded-lg hover:bg-neon-lime transition-all font-semibold"
+              class="inline-flex items-center gap-2 bg-emerald text-obsidian px-4 sm:px-6 py-2 text-sm sm:text-base rounded-lg hover:bg-neon-lime transition-all font-semibold truncate"
             >
-              <span>mokumabrady13@gmail.com</span>
+              <span class="truncate">mokumabrady13@gmail.com</span>
+              <span>→</span>
+            </a>
+          </div>
+
+          <!-- WhatsApp -->
+          <div class="text-center p-6 bg-obsidian rounded-xl border border-gray-800 hover:border-emerald transition-all w-full" data-aos="fade-up" data-aos-delay="400">
+            <img src="@/assets/icones/whatsApp2.png" alt="WhatsApp" class="h-16 w-16 mx-auto mb-4 object-contain">
+            <h3 class="text-xl font-semibold mb-3 text-emerald">WhatsApp</h3>
+            <p class="text-gray-custom mb-4">Discutez directement avec moi</p>
+            <a 
+              href="https://wa.me/33XXXXXXXXX" 
+              target="_blank"
+              class="inline-flex items-center gap-2 bg-emerald text-obsidian px-4 sm:px-6 py-2 text-sm sm:text-base rounded-lg hover:bg-neon-lime transition-all font-semibold"
+            >
+              <span>Ouvrir WhatsApp</span>
               <span>→</span>
             </a>
           </div>
@@ -278,7 +294,7 @@
         <div class="mt-16 text-center">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="bg-obsidian p-6 rounded-xl border border-gray-800">
-              <h4 class="text-lg font-semibold mb-3 text-emerald">📍 Localisation</h4>
+            <img src="@/assets/icones/localisation.png" alt="Localisation" class="h-8 w-8 inline-block mr-2">Localisation
               <p class="text-gray-custom">Disponible pour missions en remote et sur Paris</p>
             </div>
             <div class="bg-obsidian p-6 rounded-xl border border-gray-800">
@@ -296,12 +312,12 @@
       class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50"
       @click="closeProjectDetail"
     >
-      <div class="bg-dark-jungle rounded-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto" @click.stop>
-        <div class="flex justify-between items-start mb-6">
-          <h3 class="text-2xl font-bold text-off-white">{{ selectedProject.project_name }}</h3>
+      <div class="bg-dark-jungle rounded-xl p-4 sm:p-6 md:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto" @click.stop>
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 sm:mb-6 gap-2">
+          <h3 class="text-xl sm:text-2xl font-bold text-off-white">{{ selectedProject.project_name }}</h3>
           <button 
             @click="closeProjectDetail"
-            class="text-gray-custom hover:text-off-white text-2xl"
+            class="self-end sm:self-auto text-gray-custom hover:text-off-white text-2xl"
           >
             ✕
           </button>
@@ -323,12 +339,12 @@
           </span>
         </div>
         
-        <div class="flex gap-4">
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <a 
             v-if="selectedProject.github_link"
             :href="selectedProject.github_link"
             target="_blank"
-            class="bg-emerald text-obsidian px-6 py-2 rounded-lg hover:bg-neon-lime transition-all"
+            class="bg-emerald text-obsidian px-4 sm:px-6 py-2 text-sm sm:text-base rounded-lg hover:bg-neon-lime transition-all text-center"
           >
             Voir le code
           </a>
@@ -336,7 +352,7 @@
             v-if="selectedProject.demo_link"
             :href="selectedProject.demo_link"
             target="_blank"
-            class="border border-emerald text-emerald px-6 py-2 rounded-lg hover:bg-emerald hover:text-obsidian transition-all"
+            class="border border-emerald text-emerald px-4 sm:px-6 py-2 text-sm sm:text-base rounded-lg hover:bg-emerald hover:text-obsidian transition-all text-center"
           >
             Voir la démo
           </a>
