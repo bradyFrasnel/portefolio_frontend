@@ -86,13 +86,18 @@
           <p class="text-base sm:text-xl text-gray-custom">Découvrez mes réalisations récentes</p>
         </div>
 
-        <!-- Filtres (supprimés pour simplification) -->
-
-        <!-- Projets Grid - Centré -->
-        <div v-if="projectsLoading" class="text-center py-12 text-gray-custom">
-          Chargement des projets...
+        <!-- État : Chargement -->
+        <div v-if="projectsLoading" class="flex flex-col items-center justify-center py-20 gap-6">
+          <div class="loader-ring"></div>
+          <p class="text-gray-custom text-sm animate-pulse">
+            {{ loadingMessage }}
+          </p>
+          <p class="text-xs text-gray-500">Le serveur peut prendre ~30s au démarrage</p>
         </div>
+
+        <!-- État : Erreur -->
         <div v-else-if="projectsError" class="text-center py-12">
+          <div class="text-5xl mb-4">😕</div>
           <p class="text-red-400 mb-4">{{ projectsError }}</p>
           <button
             @click="loadData"
@@ -101,28 +106,42 @@
             Réessayer
           </button>
         </div>
-        <div v-else-if="filteredProjects.length === 0" class="text-center py-12 text-gray-custom">
-          Aucun projet publié pour le moment.
+
+        <!-- État : Aucun projet -->
+        <div v-else-if="filteredProjects.length === 0" class="text-center py-12">
+          <div class="text-5xl mb-4">🚀</div>
+          <p class="text-gray-custom">Aucun projet publié pour le moment.</p>
         </div>
+
+        <!-- Grille de projets -->
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
           <div 
             v-for="project in filteredProjects" 
             :key="project.id"
-            class="bg-dark-jungle p-6 rounded-xl border border-gray-800 hover:border-emerald transition-all cursor-pointer w-full"
+            class="project-card bg-dark-jungle p-6 rounded-xl border border-gray-800 hover:border-emerald transition-all cursor-pointer w-full"
             @click="showProjectDetail(project)"
             data-aos="fade-up"
           >
-            <div class="w-full h-32 sm:h-40 md:h-48 rounded-lg mb-4 overflow-hidden bg-gray-800">
+            <!-- Miniature image -->
+            <div class="w-full h-32 sm:h-40 md:h-48 rounded-lg mb-4 overflow-hidden bg-gray-800 relative">
               <img 
                 v-if="project.image_url"
                 :src="project.image_url" 
                 :alt="project.project_name"
-                class="w-full h-full object-cover"
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 @error="(e) => e.target.style.display = 'none'"
               >
+              <!-- Placeholder CSS quand pas d'image (aucune dépendance externe) -->
+              <div 
+                v-if="!project.image_url"
+                class="w-full h-full flex flex-col items-center justify-center gap-2 project-placeholder"
+              >
+                <div class="text-3xl opacity-60">💻</div>
+                <span class="text-xs text-gray-500 font-medium uppercase tracking-widest">{{ project.project_name.charAt(0) }}</span>
+              </div>
             </div>
             <h3 class="text-xl font-semibold mb-2 text-off-white">{{ project.project_name }}</h3>
-            <p class="text-gray-custom mb-4">{{ project.project_description }}</p>
+            <p class="text-gray-custom mb-4 line-clamp-2">{{ project.project_description }}</p>
             <div class="flex flex-wrap gap-2 mb-4">
               <span v-for="tech in project.technology_used.split(',')" :key="tech"
                     class="px-3 py-1 bg-emerald/20 text-emerald rounded-full text-sm">
@@ -246,7 +265,7 @@
           <p class="text-xl text-gray-custom">Retrouvez-moi sur les plateformes professionnelles</p>
         </div>
 
-        <!-- Cartes Identifiants - Centrées -->
+        <!-- Cartes Identifiants -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
           <!-- GitHub -->
           <div class="text-center p-6 bg-obsidian rounded-xl border border-gray-800 hover:border-emerald transition-all w-full" data-aos="fade-up" data-aos-delay="100">
@@ -341,13 +360,23 @@
           </button>
         </div>
         
-        <div v-if="selectedProject.image_url" class="w-full aspect-video rounded-lg mb-6 overflow-hidden bg-gray-800">
+        <!-- Image du projet dans la modale -->
+        <div class="w-full aspect-video rounded-lg mb-6 overflow-hidden bg-gray-800">
           <img 
+            v-if="selectedProject.image_url"
             :src="selectedProject.image_url" 
             :alt="selectedProject.project_name"
             class="w-full h-full object-cover"
             @error="(e) => e.target.style.display = 'none'"
           >
+          <!-- Placeholder CSS si pas d'image -->
+          <div 
+            v-if="!selectedProject.image_url"
+            class="w-full h-full flex flex-col items-center justify-center gap-3 project-placeholder"
+          >
+            <div class="text-5xl opacity-50">💻</div>
+            <span class="text-sm text-gray-500 font-medium">Aucune image disponible</span>
+          </div>
         </div>
         
         <p class="text-gray-custom mb-6">{{ selectedProject.project_description }}</p>
@@ -397,6 +426,17 @@ const projects = ref([])
 const projectsLoading = ref(true)
 const projectsError = ref('')
 
+// Message animé pendant le chargement (cold start Render)
+const loadingMessages = [
+  'Chargement des projets...',
+  'Connexion au serveur...',
+  'Le serveur se réveille, patientez...',
+  'Presque prêt...',
+]
+const loadingMsgIndex = ref(0)
+const loadingMessage = computed(() => loadingMessages[loadingMsgIndex.value % loadingMessages.length])
+let loadingTimer = null
+
 const contactForm = ref({
   nom: '',
   email: '',
@@ -423,11 +463,6 @@ const scrollToSection = (sectionId) => {
     element.scrollIntoView({ behavior: 'smooth' })
     mobileMenuOpen.value = false
   }
-}
-
-const filterProjects = (categoryId) => {
-  // Fonction conservée pour compatibilité mais non utilisée
-  console.log('Filtrage désactivé')
 }
 
 const showProjectDetail = (project) => {
@@ -459,6 +494,12 @@ const submitContact = async () => {
 const loadData = async () => {
   projectsLoading.value = true
   projectsError.value = ''
+
+  // Animer le message de chargement toutes les 4 secondes (cold start Render ~30s)
+  loadingTimer = setInterval(() => {
+    loadingMsgIndex.value++
+  }, 4000)
+
   try {
     const projectsResponse = await api.getProjects()
     projects.value = parseProjectsResponse(projectsResponse.data)
@@ -466,17 +507,58 @@ const loadData = async () => {
     console.error('Erreur chargement données:', error)
     projectsError.value = 'Impossible de charger les projets. Le serveur peut être en cours de démarrage.'
   } finally {
+    clearInterval(loadingTimer)
     projectsLoading.value = false
   }
 }
 
 onMounted(() => {
   document.documentElement.classList.add('dark')
+  // Charger les projets immédiatement au montage
   loadData()
-  
+
   // Initialiser AOS si disponible
   if (typeof AOS !== 'undefined') {
     AOS.init()
   }
 })
 </script>
+
+<style scoped>
+/* Spinner de chargement personnalisé */
+.loader-ring {
+  width: 56px;
+  height: 56px;
+  border: 4px solid rgba(16, 185, 129, 0.15);
+  border-top-color: #10b981;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Placeholder CSS pour les projets sans image — aucune dépendance externe */
+.project-placeholder {
+  background: linear-gradient(135deg, #1a2e2a 0%, #0f1f1b 100%);
+}
+
+/* Carte projet */
+.project-card {
+  transition: all 0.3s ease;
+}
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.12);
+}
+
+/* Line-clamp pour la description */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>
