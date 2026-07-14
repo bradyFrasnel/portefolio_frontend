@@ -29,10 +29,10 @@
 
       <div v-else-if="project" class="bg-white rounded-xl shadow-lg overflow-hidden">
         <img 
-          :src="project.image_url || project.project_image" 
+          :src="projectImageSrc(project, 'detail')" 
           :alt="project.project_name"
           class="h-64 h-full w-full object-cover"
-          @error="(e) => e.target.src = 'https://via.placeholder.com/1200x600?text=Projet'"
+          @error="(e) => handleImageError(e, 'detail')"
         >
         
         <div class="p-8">
@@ -137,6 +137,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '../services/api.js'
 import Footer from '../components/Footer.vue'
+import { projectImageSrc, handleImageError } from '../utils/placeholders.js'
 
 const route = useRoute()
 const router = useRouter()

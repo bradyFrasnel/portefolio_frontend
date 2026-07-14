@@ -319,10 +319,10 @@
           >
             <!-- Image de fond -->
             <img 
-              :src="project.image_url || project.project_image" 
+              :src="projectImageSrc(project, 'admin')" 
               :alt="project.project_name" 
               class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-60 group-hover:opacity-80"
-              @error="(e) => e.target.src = 'https://via.placeholder.com/800x450/111827/10b981?text=Aperçu'"
+              @error="(e) => handleImageError(e, 'admin')"
             >
             
             <!-- Overlay dégradé -->
@@ -383,6 +383,7 @@ import {
 } from 'echarts/components'
 import VChart from 'vue-echarts'
 import api from '../services/api.js'
+import { projectImageSrc, handleImageError } from '../utils/placeholders.js'
 
 // Enregistrer les composants ECharts
 use([
@@ -798,6 +799,8 @@ export default {
       goToPortfolio,
       goToApiDocs,
       logout,
+      projectImageSrc,
+      handleImageError,
       // Dashboard stats
       projectsThisMonth,
       uniqueTechnologies,

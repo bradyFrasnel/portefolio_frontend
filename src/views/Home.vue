@@ -98,10 +98,10 @@
             data-aos="fade-up"
           >
             <img 
-              :src="project.image_url || project.project_image" 
+              :src="projectImageSrc(project, 'card')" 
               :alt="project.project_name"
               class="w-full h-32 sm:h-40 md:h-48 object-cover rounded-lg mb-4"
-              @error="(e) => e.target.src = 'https://via.placeholder.com/400x225?text=Projet'"
+              @error="(e) => handleImageError(e, 'card')"
             >
             <h3 class="text-xl font-semibold mb-2 text-off-white">{{ project.project_name }}</h3>
             <p class="text-gray-custom mb-4">{{ project.project_description }}</p>
@@ -324,10 +324,10 @@
         </div>
         
         <img 
-          :src="selectedProject.image_url || selectedProject.project_image" 
+          :src="projectImageSrc(selectedProject, 'preview')" 
           :alt="selectedProject.project_name"
           class="w-full aspect-video object-cover rounded-lg mb-6"
-          @error="(e) => e.target.src = 'https://via.placeholder.com/800x450?text=Aperçu'"
+          @error="(e) => handleImageError(e, 'preview')"
         >
         
         <p class="text-gray-custom mb-6">{{ selectedProject.project_description }}</p>
@@ -365,6 +365,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import api from '../services/api.js'
+import { projectImageSrc, handleImageError } from '../utils/placeholders.js'
 
 const isDarkMode = ref(true)
 const mobileMenuOpen = ref(false)

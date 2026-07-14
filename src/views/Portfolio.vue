@@ -64,10 +64,10 @@
           :data-aos-delay="projects.indexOf(project) * 100"
         >
           <img 
-            :src="project.image_url || project.project_image" 
+            :src="projectImageSrc(project, 'card')" 
             :alt="project.project_name"
             class="h-40 sm:h-48 w-full object-cover"
-            @error="(e) => e.target.src = 'https://via.placeholder.com/400x225?text=Projet'"
+            @error="(e) => handleImageError(e, 'card')"
           >
           <div class="p-4 sm:p-6">
             <h3 class="text-lg sm:text-xl font-semibold mb-2">{{ project.project_name }}</h3>
@@ -119,6 +119,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../services/api.js'
 import Footer from '../components/Footer.vue'
+import { projectImageSrc, handleImageError } from '../utils/placeholders.js'
 
 const router = useRouter()
 const projects = ref([])
