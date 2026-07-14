@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-900 text-white p-8">
-    <div class="max-w-7xl mx-auto">\n      <!-- Header -->
+    <div class="max-w-7xl mx-auto">      <!-- Header -->
       <div class="mb-8 flex justify-between items-center">
         <div>
           <h1 class="text-3xl font-bold text-emerald-500 mb-2">Interface d'Administration</h1>
