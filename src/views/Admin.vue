@@ -319,10 +319,11 @@
           >
             <!-- Image de fond -->
             <img 
-              :src="projectImageSrc(project, 'admin')" 
+              v-if="project.image_url"
+              :src="project.image_url" 
               :alt="project.project_name" 
               class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-60 group-hover:opacity-80"
-              @error="(e) => handleImageError(e, 'admin')"
+              @error="(e) => e.target.style.display = 'none'"
             >
             
             <!-- Overlay dégradé -->
@@ -383,7 +384,7 @@ import {
 } from 'echarts/components'
 import VChart from 'vue-echarts'
 import api from '../services/api.js'
-import { projectImageSrc, handleImageError } from '../utils/placeholders.js'
+import { parseProjectsResponse } from '../utils/projects.js'
 
 // Enregistrer les composants ECharts
 use([
@@ -685,7 +686,7 @@ export default {
     const loadProjects = async () => {
       try {
         const response = await api.getProjects()
-        projects.value = response.data.results
+        projects.value = parseProjectsResponse(response.data)
       } catch (err) {
         console.error('Erreur chargement projets:', err)
       }
@@ -799,8 +800,6 @@ export default {
       goToPortfolio,
       goToApiDocs,
       logout,
-      projectImageSrc,
-      handleImageError,
       // Dashboard stats
       projectsThisMonth,
       uniqueTechnologies,

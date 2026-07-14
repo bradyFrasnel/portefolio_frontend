@@ -28,12 +28,14 @@
       </div>
 
       <div v-else-if="project" class="bg-white rounded-xl shadow-lg overflow-hidden">
-        <img 
-          :src="projectImageSrc(project, 'detail')" 
-          :alt="project.project_name"
-          class="h-64 h-full w-full object-cover"
-          @error="(e) => handleImageError(e, 'detail')"
-        >
+        <div v-if="project.image_url" class="h-64 w-full bg-gray-200 overflow-hidden">
+          <img 
+            :src="project.image_url" 
+            :alt="project.project_name"
+            class="h-full w-full object-cover"
+            @error="(e) => e.target.style.display = 'none'"
+          >
+        </div>
         
         <div class="p-8">
           <div class="mb-6">
@@ -137,7 +139,6 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '../services/api.js'
 import Footer from '../components/Footer.vue'
-import { projectImageSrc, handleImageError } from '../utils/placeholders.js'
 
 const route = useRoute()
 const router = useRouter()

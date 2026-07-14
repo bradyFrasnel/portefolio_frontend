@@ -89,7 +89,22 @@
         <!-- Filtres (supprimés pour simplification) -->
 
         <!-- Projets Grid - Centré -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+        <div v-if="projectsLoading" class="text-center py-12 text-gray-custom">
+          Chargement des projets...
+        </div>
+        <div v-else-if="projectsError" class="text-center py-12">
+          <p class="text-red-400 mb-4">{{ projectsError }}</p>
+          <button
+            @click="loadData"
+            class="bg-emerald text-obsidian px-6 py-2 rounded-lg hover:bg-neon-lime transition-all font-semibold"
+          >
+            Réessayer
+          </button>
+        </div>
+        <div v-else-if="filteredProjects.length === 0" class="text-center py-12 text-gray-custom">
+          Aucun projet publié pour le moment.
+        </div>
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
           <div 
             v-for="project in filteredProjects" 
             :key="project.id"
@@ -97,12 +112,15 @@
             @click="showProjectDetail(project)"
             data-aos="fade-up"
           >
-            <img 
-              :src="projectImageSrc(project, 'card')" 
-              :alt="project.project_name"
-              class="w-full h-32 sm:h-40 md:h-48 object-cover rounded-lg mb-4"
-              @error="(e) => handleImageError(e, 'card')"
-            >
+            <div class="w-full h-32 sm:h-40 md:h-48 rounded-lg mb-4 overflow-hidden bg-gray-800">
+              <img 
+                v-if="project.image_url"
+                :src="project.image_url" 
+                :alt="project.project_name"
+                class="w-full h-full object-cover"
+                @error="(e) => e.target.style.display = 'none'"
+              >
+            </div>
             <h3 class="text-xl font-semibold mb-2 text-off-white">{{ project.project_name }}</h3>
             <p class="text-gray-custom mb-4">{{ project.project_description }}</p>
             <div class="flex flex-wrap gap-2 mb-4">
@@ -323,12 +341,14 @@
           </button>
         </div>
         
-        <img 
-          :src="projectImageSrc(selectedProject, 'preview')" 
-          :alt="selectedProject.project_name"
-          class="w-full aspect-video object-cover rounded-lg mb-6"
-          @error="(e) => handleImageError(e, 'preview')"
-        >
+        <div v-if="selectedProject.image_url" class="w-full aspect-video rounded-lg mb-6 overflow-hidden bg-gray-800">
+          <img 
+            :src="selectedProject.image_url" 
+            :alt="selectedProject.project_name"
+            class="w-full h-full object-cover"
+            @error="(e) => e.target.style.display = 'none'"
+          >
+        </div>
         
         <p class="text-gray-custom mb-6">{{ selectedProject.project_description }}</p>
         
@@ -365,7 +385,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import api from '../services/api.js'
-import { projectImageSrc, handleImageError } from '../utils/placeholders.js'
+import { parseProjectsResponse } from '../utils/projects.js'
 
 const isDarkMode = ref(true)
 const mobileMenuOpen = ref(false)
@@ -374,6 +394,8 @@ const successMessage = ref('')
 const selectedProject = ref(null)
 
 const projects = ref([])
+const projectsLoading = ref(true)
+const projectsError = ref('')
 
 const contactForm = ref({
   nom: '',
@@ -435,11 +457,16 @@ const submitContact = async () => {
 }
 
 const loadData = async () => {
+  projectsLoading.value = true
+  projectsError.value = ''
   try {
     const projectsResponse = await api.getProjects()
-    projects.value = projectsResponse.data.results
+    projects.value = parseProjectsResponse(projectsResponse.data)
   } catch (error) {
     console.error('Erreur chargement données:', error)
+    projectsError.value = 'Impossible de charger les projets. Le serveur peut être en cours de démarrage.'
+  } finally {
+    projectsLoading.value = false
   }
 }
 

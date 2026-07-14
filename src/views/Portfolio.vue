@@ -63,12 +63,15 @@
           data-aos="fade-up"
           :data-aos-delay="projects.indexOf(project) * 100"
         >
-          <img 
-            :src="projectImageSrc(project, 'card')" 
-            :alt="project.project_name"
-            class="h-40 sm:h-48 w-full object-cover"
-            @error="(e) => handleImageError(e, 'card')"
-          >
+          <div class="h-40 sm:h-48 w-full bg-gray-200 overflow-hidden">
+            <img 
+              v-if="project.image_url"
+              :src="project.image_url" 
+              :alt="project.project_name"
+              class="h-full w-full object-cover"
+              @error="(e) => e.target.style.display = 'none'"
+            >
+          </div>
           <div class="p-4 sm:p-6">
             <h3 class="text-lg sm:text-xl font-semibold mb-2">{{ project.project_name }}</h3>
             <p class="text-gray-600 text-sm sm:text-base mb-4 line-clamp-3">{{ project.project_description }}</p>
@@ -119,7 +122,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../services/api.js'
 import Footer from '../components/Footer.vue'
-import { projectImageSrc, handleImageError } from '../utils/placeholders.js'
+import { parseProjectsResponse } from '../utils/projects.js'
 
 const router = useRouter()
 const projects = ref([])
@@ -139,18 +142,13 @@ const fetchProjects = async () => {
   try {
     loading.value = true
     const response = await api.getProjects(currentPage.value, searchQuery.value)
-    projects.value = response.data.results
-    totalPages.value = Math.ceil(response.data.count / 12)
+    projects.value = parseProjectsResponse(response.data)
+    totalPages.value = Math.ceil((response.data.count || projects.value.length) / 12)
     error.value = null
   } catch (err) {
     console.error('Erreur:', err)
-    // Données de démonstration si le backend n'est pas encore accessible
-    projects.value = [
-      { id: 1, title: 'Projet E-commerce', description: 'Site e-commerce moderne avec Vue.js et Django', technologies: ['Vue.js', 'Django', 'PostgreSQL'], category: 'Site Vitrine', date: '2024' },
-      { id: 2, title: 'Application Mobile', description: 'App iOS/Android avec React Native et Django REST', technologies: ['React Native', 'Django REST', 'PostgreSQL'], category: 'Application Web', date: '2024' },
-      { id: 3, title: 'Portfolio Personnel', description: 'Site portfolio responsive et moderne avec animations', technologies: ['Vue.js', 'Tailwind CSS', 'AOS'], category: 'Site Vitrine', date: '2023' }
-    ]
-    error.value = null
+    projects.value = []
+    error.value = 'Impossible de charger les projets. Réessayez dans quelques instants.'
   } finally {
     loading.value = false
   }
