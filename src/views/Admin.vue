@@ -1,23 +1,19 @@
 <template>
-  <div class="min-h-screen bg-gray-900 text-white p-8">
-    <div class="max-w-7xl mx-auto">      <!-- Header -->
-      <div class="mb-8 flex justify-between items-center">
-        <div>
-          <h1 class="text-3xl font-bold text-emerald-500 mb-2">Interface d'Administration</h1>
-          <p class="text-gray-400">Gérez vos projets et technologies</p>
-        </div>
+  <div class="min-h-screen bg-gray-900 text-white p-8 flex items-center justify-center">
+    <div class="w-full max-w-md mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-center">
         <button 
           v-if="isLoggedIn" 
           @click="logout" 
-          class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200"
+          class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm transition duration-200"
         >
           Déconnexion
         </button>
       </div>
 
       <!-- Connexion -->
-      <div v-if="!isLoggedIn" class="bg-gray-800 rounded-lg p-8 mb-8">
-        <h2 class="text-xl font-semibold mb-6 text-emerald-500">Connexion Admin</h2>
+      <div v-if="!isLoggedIn" class="bg-gray-800 rounded-3xl p-6 md:p-8 mb-8 w-full max-w-sm mx-auto shadow-xl shadow-black/20">
+        <h2 class="text-xl font-semibold mb-5 text-emerald-500">Connexion Admin</h2>
         <form @submit.prevent="login" class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-2">Nom d'utilisateur</label>
@@ -25,7 +21,7 @@
               v-model="loginForm.username"
               type="text"
               required
-              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+              class="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
               placeholder="admin"
             />
           </div>
@@ -36,7 +32,7 @@
                 v-model="loginForm.password"
                 :type="showPassword ? 'text' : 'password'"
                 required
-                class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white pr-10"
+                class="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white pr-10"
                 placeholder="••••••••"
               />
               <button
@@ -61,18 +57,17 @@
           <button
             type="submit"
             :disabled="loading"
-            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-md transition duration-200"
+            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-xl transition duration-200 text-sm"
           >
             <span v-if="!loading">Se connecter</span>
             <span v-else>Connexion...</span>
           </button>
         </form>
       </div>
-
       <!-- Tableau de bord -->
       <div v-if="isLoggedIn">
         <!-- Cartes statistiques -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
           <!-- Total Projets -->
           <div class="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 backdrop-blur-md rounded-2xl p-6 border border-emerald-500/20 hover:border-emerald-500/40 transition-all hover:scale-105 cursor-pointer">
             <div class="flex items-center justify-between mb-2">
@@ -160,21 +155,21 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <button
               @click="showCreateForm = !showCreateForm"
-              class="flex items-center justify-center space-x-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white py-4 rounded-xl transition-all shadow-lg shadow-emerald-500/20 font-bold hover:scale-105"
+              class="flex items-center justify-center space-x-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white py-3 rounded-2xl transition-all shadow-lg shadow-emerald-500/20 font-semibold hover:scale-[1.02] text-sm"
             >
               <span class="text-2xl">➕</span>
               <span>Ajouter un projet</span>
             </button>
             <button
               @click="refreshData"
-              class="flex items-center justify-center space-x-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white py-4 rounded-xl transition-all shadow-lg shadow-blue-500/20 font-bold hover:scale-105"
+              class="flex items-center justify-center space-x-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white py-3 rounded-2xl transition-all shadow-lg shadow-blue-500/20 font-semibold hover:scale-[1.02] text-sm"
             >
               <span class="text-2xl group-hover:rotate-180 transition-transform duration-500">🔄</span>
               <span>Rafraîchir</span>
             </button>
             <button
               @click="goToApiDocs"
-              class="flex items-center justify-center space-x-3 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white py-4 rounded-xl transition-all shadow-lg shadow-purple-500/20 font-bold hover:scale-105"
+              class="flex items-center justify-center space-x-3 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white py-3 rounded-2xl transition-all shadow-lg shadow-purple-500/20 font-semibold hover:scale-[1.02] text-sm"
             >
               <span class="text-2xl">📚</span>
               <span>API Docs</span>
@@ -184,25 +179,25 @@
       </div>
 
       <!-- Formulaire de création de projet -->
-      <div v-if="showCreateForm" class="mt-8 bg-gray-800 rounded-lg p-8">
-        <h3 class="text-2xl font-bold mb-6 text-emerald-500">Déposer un Nouveau Projet</h3>
-        <form @submit.prevent="createProject" class="space-y-4">
+      <div v-if="showCreateForm" class="mt-8 bg-gray-800 rounded-3xl p-5 md:p-6 max-w-2xl mx-auto shadow-lg shadow-black/20">
+        <h3 class="text-xl md:text-2xl font-bold mb-5 text-emerald-500">Déposer un Nouveau Projet</h3>
+        <form @submit.prevent="createProject" class="space-y-4 text-sm">
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-2">Titre du Projet</label>
             <input
               v-model="projectForm.project_name"
               type="text"
               required
-              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+              class="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
               placeholder="Ex: Portfolio Moderne"
             />
           </div>
           
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-2">Image du projet (Upload Cloudinary)</label>
-            <div class="flex items-center space-x-4">
+            <div class="flex flex-col md:flex-row md:items-center gap-4">
               <label class="flex-1 cursor-pointer">
-                <div class="flex items-center justify-center px-4 py-2 bg-gray-700 border border-gray-600 rounded-md hover:bg-gray-600 transition-colors text-gray-300">
+                <div class="flex items-center justify-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl hover:bg-gray-600 transition-colors text-gray-300 text-sm">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                   </svg>
@@ -219,7 +214,7 @@
                 v-if="projectForm.project_image" 
                 type="button" 
                 @click="projectForm.project_image = ''; localPreview = ''"
-                class="text-red-500 hover:text-red-400 text-sm font-bold"
+                class="text-red-500 hover:text-red-400 text-sm font-semibold"
               >
                 Annuler
               </button>
@@ -228,7 +223,7 @@
             <!-- Previsualisation image -->
             <div v-if="imagePreviewUrl" class="mt-4">
               <p class="text-xs text-gray-400 mb-2">Aperçu :</p>
-              <img :src="imagePreviewUrl" class="h-48 rounded-xl border border-white/10 object-cover shadow-lg" />
+              <img :src="imagePreviewUrl" class="h-36 rounded-xl border border-white/10 object-cover shadow-lg" />
             </div>
           </div>
           
@@ -237,8 +232,8 @@
             <textarea
               v-model="projectForm.project_description"
               required
-              rows="6"
-              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+              rows="4"
+              class="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
               placeholder="Description complète du projet"
             ></textarea>
           </div>
@@ -249,7 +244,7 @@
               v-model="projectForm.technology_used"
               type="text"
               required
-              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+              class="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
               placeholder="Django, Vue.js, Supabase"
             />
           </div>
@@ -260,7 +255,7 @@
               <input
                 v-model="projectForm.github_link"
                 type="url"
-                class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+                class="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
                 placeholder="https://github.com/..."
               />
             </div>
@@ -269,18 +264,18 @@
               <input
                 v-model="projectForm.demo_link"
                 type="url"
-                class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+                class="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
                 placeholder="https://demo.exemple.com"
               />
             </div>
           </div>
           
           
-          <div class="flex gap-4">
+          <div class="flex flex-wrap gap-3">
             <button
               type="submit"
               :disabled="loading"
-              class="bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-6 rounded-md disabled:opacity-50"
+              class="bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-5 rounded-xl text-sm disabled:opacity-50"
             >
               <span v-if="!loading">Déposer</span>
               <span v-else>Création...</span>
@@ -288,7 +283,7 @@
             <button
               type="button"
               @click="showCreateForm = false"
-              class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-md"
+              class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-5 rounded-xl text-sm"
             >
               Annuler
             </button>
@@ -414,7 +409,7 @@ export default {
     const localPreview = ref('')
 
     const loginForm = ref({
-      username: 'brady',
+      username: '',
       password: ''
     })
 
