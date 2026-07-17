@@ -40,3 +40,10 @@ __screenshots__/
 
 # env
 .env
+
+#Les agents
+
+.agents
+.claude
+.trae
+skills-lock.json
