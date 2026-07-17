@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-900 text-white p-8 flex items-center justify-center">
-    <div class="w-full max-w-md mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-center">
         <button 
           v-if="isLoggedIn" 
@@ -12,7 +12,7 @@
       </div>
 
       <!-- Connexion -->
-      <div v-if="!isLoggedIn" class="bg-gray-800 rounded-3xl p-6 md:p-8 mb-8 w-full max-w-sm mx-auto shadow-xl shadow-black/20">
+      <div v-if="!isLoggedIn" class="bg-gray-800 rounded-3xl p-6 md:p-8 mb-8 w-full max-w-sm mx-auto shadow-xl shadow-black/20 border border-white/10">
         <h2 class="text-xl font-semibold mb-5 text-emerald-500">Connexion Admin</h2>
         <form @submit.prevent="login" class="space-y-4">
           <div>
@@ -57,7 +57,7 @@
           <button
             type="submit"
             :disabled="loading"
-            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-xl transition duration-200 text-sm"
+            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-xl transition duration-200 text-sm shadow-lg shadow-emerald-500/20"
           >
             <span v-if="!loading">Se connecter</span>
             <span v-else>Connexion...</span>
@@ -65,7 +65,7 @@
         </form>
       </div>
       <!-- Tableau de bord -->
-      <div v-if="isLoggedIn">
+      <div v-if="isLoggedIn" class="space-y-8">
         <!-- Cartes statistiques -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
           <!-- Total Projets -->
