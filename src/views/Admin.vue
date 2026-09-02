@@ -533,12 +533,12 @@ export default {
 
     // Configuration graphique visiteurs
     const visitorsChartOption = computed(() => {
-      const data = analyticsStats.value?.visitors_timeline || []
+      const data = analyticsStats.value?.page_views_over_time || []
       const dates = data.map(item => {
         const d = new Date(item.date)
         return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })
       })
-      const visitors = data.map(item => item.visitors)
+      const visitors = data.map(item => item.views)
 
       return {
         tooltip: {
@@ -584,8 +584,8 @@ export default {
 
     // Configuration graphique top projets
     const topProjectsChartOption = computed(() => {
-      const data = analyticsStats.value?.top_projects || []
-      const names = data.map(item => item.project_name)
+      const data = analyticsStats.value?.visits_per_project || []
+      const names = data.map(item => item.project__project_name)
       const views = data.map(item => item.views)
 
       return {

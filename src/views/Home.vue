@@ -524,7 +524,7 @@ const scrollToSection = (sectionId) => {
 
 const showProjectDetail = (project) => {
   selectedProject.value = project
-  trackEvent('project_click', project.id)
+  trackEvent('project_detail', project.id)
 }
 
 const closeProjectDetail = () => {
@@ -578,7 +578,7 @@ onMounted(() => {
   if (isDarkMode.value) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark')
   // Charger les projets immédiatement au montage
   loadData()
-  trackEvent('page_view')
+  trackEvent('home')
 
   // Initialiser AOS si disponible
   if (typeof AOS !== 'undefined') {
