@@ -47,7 +47,7 @@
   },
   "contact": {
     "title": "Contact",
-    "subtitle": "Discutons de votre projet",
+    "subtitle": "Laissez-moi un message !",
     "name": "Nom",
     "name_ph": "Votre nom",
     "email": "Email",
@@ -63,7 +63,9 @@
     "btn_send": "Envoyer le message",
     "btn_sending": "Envoi en cours...",
     "success": "Message envoyé avec succès !",
-    "error": "Erreur lors de l'envoi du message"
+    "error": "Erreur lors de l'envoi du message",
+    "phone": "Téléphone",
+    "phone_ph": "+214 74 14 59 49"
   },
   "identifiants": {
     "title": "Identifiants Personnel",

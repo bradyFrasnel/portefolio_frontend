@@ -249,10 +249,20 @@
                 :placeholder="$t('contact.email_ph')"
               />
             </div>
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium text-gray-600 dark:text-gray-custom mb-2">{{ $t('contact.project_type') }}</label>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-600 dark:text-gray-custom mb-2">{{ $t('contact.phone') }}</label>
+              <input
+                v-model="contactForm.telephone"
+                type="tel"
+                class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white dark:bg-dark-jungle border border-gray-200 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald text-gray-900 dark:text-off-white text-sm sm:text-base"
+                :placeholder="$t('contact.phone_ph')"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-600 dark:text-gray-custom mb-2">{{ $t('contact.project_type') }}</label>
             <select
               v-model="contactForm.type_projet"
               required
@@ -491,6 +501,7 @@ let loadingTimer = null
 const contactForm = ref({
   nom: '',
   email: '',
+  telephone: '',
   type_projet: '',
   message: ''
 })
@@ -538,7 +549,7 @@ const submitContact = async () => {
   try {
     await api.sendContact(contactForm.value)
     successMessage.value = t('contact.success')
-    contactForm.value = { nom: '', email: '', type_projet: '', message: '' }
+    contactForm.value = { nom: '', email: '', telephone: '', type_projet: '', message: '' }
   } catch (error) {
     successMessage.value = t('contact.error')
   } finally {

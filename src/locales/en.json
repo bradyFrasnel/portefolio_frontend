@@ -47,7 +47,7 @@
   },
   "contact": {
     "title": "Contact",
-    "subtitle": "Let's discuss your project",
+    "subtitle": "Leave me a message !",
     "name": "Name",
     "name_ph": "Your name",
     "email": "Email",
@@ -63,7 +63,9 @@
     "btn_send": "Send Message",
     "btn_sending": "Sending...",
     "success": "Message sent successfully!",
-    "error": "Error sending the message"
+    "error": "Error sending the message",
+    "phone": "Phone",
+    "phone_ph": "+241 74 14 59 49"
   },
   "identifiants": {
     "title": "Personal Profiles",
