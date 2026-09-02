@@ -12,6 +12,13 @@
     <meta property="og:url" content="https://portefolio-three-xi.vercel.app">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="theme-color" content="#0a0a0a">
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    </script>
   </head>
   <body>
     <div id="app"></div>

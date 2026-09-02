@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 text-white p-8 flex flex-col relative">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white p-8 flex flex-col relative">
     
     <!-- Toast Notification -->
     <div v-if="toast.show" 
@@ -11,10 +11,10 @@
     <!-- Confirmation Modal -->
     <div v-if="showDeleteConfirm" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
       <div class="bg-gray-200 dark:bg-gray-800 rounded-3xl p-6 md:p-8 max-w-sm w-full shadow-2xl border border-white/10">
-        <h3 class="text-xl font-bold text-white mb-4">Confirmer la suppression</h3>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Confirmer la suppression</h3>
         <p class="text-gray-700 dark:text-gray-300 mb-6">Voulez-vous vraiment supprimer cet élément ? Cette action est irréversible.</p>
         <div class="flex justify-end gap-3">
-          <button @click="showDeleteConfirm = false" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-600 text-white rounded-xl text-sm transition-colors">Annuler</button>
+          <button @click="showDeleteConfirm = false" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl text-sm transition-colors">Annuler</button>
           <button @click="confirmDelete" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm transition-colors">Supprimer</button>
         </div>
       </div>
@@ -41,7 +41,7 @@
               v-model="loginForm.username"
               type="text"
               required
-              class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+              class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white"
               placeholder="admin"
             />
           </div>
@@ -52,7 +52,7 @@
                 v-model="loginForm.password"
                 :type="showPassword ? 'text' : 'password'"
                 required
-                class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white pr-10"
+                class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white pr-10"
                 placeholder="••••••••"
               />
               <button
@@ -99,7 +99,7 @@
               <span class="text-emerald-400 text-xs font-bold">+{{ projectsThisMonth }}</span>
             </div>
             <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Total Projets</h3>
-            <p class="text-3xl font-black text-white">{{ projects.length }}</p>
+            <p class="text-3xl font-black text-gray-900 dark:text-white">{{ projects.length }}</p>
           </div>
 
           <!-- Technologies utilisées -->
@@ -113,7 +113,7 @@
               <span class="text-blue-400 text-xs font-bold">STACK</span>
             </div>
             <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Technologies</h3>
-            <p class="text-3xl font-black text-white">{{ uniqueTechnologies }}</p>
+            <p class="text-3xl font-black text-gray-900 dark:text-white">{{ uniqueTechnologies }}</p>
           </div>
 
           <!-- Projets avec GitHub -->
@@ -127,7 +127,7 @@
               <span class="text-purple-400 text-xs font-bold">{{ projectsWithGithubPercent }}%</span>
             </div>
             <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Sur GitHub</h3>
-            <p class="text-3xl font-black text-white">{{ projectsWithGithub }}</p>
+            <p class="text-3xl font-black text-gray-900 dark:text-white">{{ projectsWithGithub }}</p>
           </div>
 
           <!-- Projets avec Demo -->
@@ -141,7 +141,7 @@
               <span class="text-orange-400 text-xs font-bold">LIVE</span>
             </div>
             <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Avec Demo</h3>
-            <p class="text-3xl font-black text-white">{{ projectsWithDemo }}</p>
+            <p class="text-3xl font-black text-gray-900 dark:text-white">{{ projectsWithDemo }}</p>
           </div>
         </div>
 
@@ -149,7 +149,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <!-- Graphique Visiteurs -->
           <div class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 border border-white/5">
-            <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
               <span class="w-2 h-6 bg-emerald-500 rounded-full mr-3"></span>
               Visiteurs (30 derniers jours)
             </h3>
@@ -158,7 +158,7 @@
 
           <!-- Graphique Projets les plus vus -->
           <div class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 border border-white/5">
-            <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
               <span class="w-2 h-6 bg-blue-500 rounded-full mr-3"></span>
               Projets les plus vus
             </h3>
@@ -168,7 +168,7 @@
 
         <!-- Actions Rapides -->
         <div class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 border border-white/5 mb-8">
-          <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
             <span class="w-2 h-6 bg-purple-500 rounded-full mr-3"></span>
             Actions Rapides
           </h3>
@@ -208,7 +208,7 @@
               v-model="projectForm.project_name"
               type="text"
               required
-              class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+              class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white"
               placeholder="Ex: Portfolio Moderne"
             />
           </div>
@@ -253,7 +253,7 @@
               v-model="projectForm.project_description"
               required
               rows="4"
-              class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+              class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white"
               placeholder="Description complète du projet"
             ></textarea>
           </div>
@@ -261,7 +261,7 @@
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Technologies (Cochez celles utilisées)</label>
             <div class="grid grid-cols-2 gap-2 mt-2 max-h-40 overflow-y-auto p-2 bg-gray-200 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600">
-              <label v-for="tech in technologies" :key="tech.id" class="flex items-center space-x-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:text-white transition-colors">
+              <label v-for="tech in technologies" :key="tech.id" class="flex items-center space-x-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors">
                 <input type="checkbox" :value="tech.id" v-model="projectForm.technologies" class="rounded text-blue-500 focus:ring-blue-500 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600">
                 <span>{{ tech.nom }}</span>
               </label>
@@ -275,7 +275,7 @@
               <input
                 v-model="projectForm.github_link"
                 type="url"
-                class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+                class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white"
                 placeholder="https://github.com/..."
               />
             </div>
@@ -284,7 +284,7 @@
               <input
                 v-model="projectForm.demo_link"
                 type="url"
-                class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+                class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white"
                 placeholder="https://demo.exemple.com"
               />
             </div>
@@ -303,7 +303,7 @@
             <button
               type="button"
               @click="cancelEdit"
-              class="bg-gray-600 hover:bg-gray-100 dark:bg-gray-700 text-white py-2 px-5 rounded-xl text-sm"
+              class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white py-2 px-5 rounded-xl text-sm"
             >
               Annuler
             </button>
@@ -313,7 +313,7 @@
       <!-- Section Projets -->
       <div v-if="isLoggedIn" class="mt-12 bg-gray-200 dark:bg-gray-800/30 rounded-3xl p-8 border border-white/5">
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <h3 class="text-2xl font-black text-white tracking-tight flex items-center">
+          <h3 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight flex items-center">
             <span class="w-2 h-8 bg-emerald-500 rounded-full mr-4"></span>
             Projets 
             <span class="ml-3 text-sm font-medium text-gray-500 uppercase tracking-widest">({{ projects.length }})</span>
@@ -347,7 +347,7 @@
             <!-- Contenu -->
             <div class="absolute inset-x-0 bottom-0 p-8 pt-20">
               <div class="relative overflow-hidden mb-3">
-                <h4 class="text-2xl font-black text-white shrink-0 drop-shadow-lg transition-all duration-500 line-clamp-2 break-all">
+                <h4 class="text-2xl font-black text-gray-900 dark:text-white shrink-0 drop-shadow-lg transition-all duration-500 line-clamp-2 break-all">
                   {{ project.project_name }}
                 </h4>
               </div>
@@ -386,7 +386,7 @@
       <!-- Section Technologies -->
       <div v-if="isLoggedIn" class="mt-8 bg-gray-200 dark:bg-gray-800/30 rounded-3xl p-8 border border-white/5 mb-12">
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <h3 class="text-2xl font-black text-white tracking-tight flex items-center">
+          <h3 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight flex items-center">
             <span class="w-2 h-8 bg-blue-500 rounded-full mr-4"></span>
             Technologies
             <span class="ml-3 text-sm font-medium text-gray-500 uppercase tracking-widest">({{ technologies.length }})</span>
@@ -399,7 +399,7 @@
             type="text" 
             required 
             placeholder="Nouvelle technologie (ex: Vue.js)" 
-            class="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-white shadow-inner"
+            class="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white shadow-inner"
           />
           <button type="submit" :disabled="loading" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition-colors font-semibold shadow-lg shadow-blue-500/20 disabled:opacity-50">Ajouter</button>
         </form>
@@ -817,7 +817,11 @@ export default {
         await loadTechnologies()
       } catch (err) {
         console.error('Erreur ajout technologie:', err)
-        showToast('Erreur lors de l\'ajout de la technologie', 'error')
+        let errorMsg = 'Erreur lors de l\'ajout de la technologie'
+        if (err.response && err.response.data && err.response.data.nom) {
+          errorMsg = 'Cette technologie existe déjà.'
+        }
+        showToast(errorMsg, 'error')
       } finally {
         loading.value = false
       }
