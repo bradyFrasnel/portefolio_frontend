@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white p-8 flex flex-col relative">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white p-4 sm:p-8 flex flex-col relative">
     
     <!-- Toast Notification -->
     <div v-if="toast.show" 
@@ -87,51 +87,51 @@
       <!-- Tableau de bord -->
       <div v-if="isLoggedIn" class="space-y-8">
         <!-- Cartes statistiques -->
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+        <div class="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
           <!-- Total Projets -->
-          <div class="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 backdrop-blur-md rounded-2xl p-6 border border-emerald-500/20 hover:border-emerald-500/40 transition-all hover:scale-105 cursor-pointer">
+          <div class="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-6 border border-emerald-500/20 hover:border-emerald-500/40 transition-all hover:scale-105 cursor-pointer">
             <div class="flex items-center justify-between mb-2">
-              <div class="p-3 bg-emerald-500/20 rounded-xl">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div class="p-2 sm:p-3 bg-emerald-500/20 rounded-xl">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
               </div>
               <span class="text-emerald-400 text-xs font-bold">+{{ projectsThisMonth }}</span>
             </div>
-            <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Total Projets</h3>
-            <p class="text-3xl font-black text-gray-900 dark:text-white">{{ projects.length }}</p>
+            <h3 class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-medium mb-1">Total Projets</h3>
+            <p class="text-xl sm:text-3xl font-black text-gray-900 dark:text-white">{{ projects.length }}</p>
           </div>
 
           <!-- Technologies utilisées -->
-          <div class="bg-gradient-to-br from-blue-500/10 to-blue-600/5 backdrop-blur-md rounded-2xl p-6 border border-blue-500/20 hover:border-blue-500/40 transition-all hover:scale-105 cursor-pointer">
+          <div class="bg-gradient-to-br from-blue-500/10 to-blue-600/5 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-6 border border-blue-500/20 hover:border-blue-500/40 transition-all hover:scale-105 cursor-pointer">
             <div class="flex items-center justify-between mb-2">
-              <div class="p-3 bg-blue-500/20 rounded-xl">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div class="p-2 sm:p-3 bg-blue-500/20 rounded-xl">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                 </svg>
               </div>
               <span class="text-blue-400 text-xs font-bold">STACK</span>
             </div>
-            <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Technologies</h3>
-            <p class="text-3xl font-black text-gray-900 dark:text-white">{{ uniqueTechnologies }}</p>
+            <h3 class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-medium mb-1">Technologies</h3>
+            <p class="text-xl sm:text-3xl font-black text-gray-900 dark:text-white">{{ uniqueTechnologies }}</p>
           </div>
 
           <!-- Projets avec GitHub -->
-          <div class="bg-gradient-to-br from-purple-500/10 to-purple-600/5 backdrop-blur-md rounded-2xl p-6 border border-purple-500/20 hover:border-purple-500/40 transition-all hover:scale-105 cursor-pointer">
+          <div class="bg-gradient-to-br from-purple-500/10 to-purple-600/5 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-6 border border-purple-500/20 hover:border-purple-500/40 transition-all hover:scale-105 cursor-pointer">
             <div class="flex items-center justify-between mb-2">
-              <div class="p-3 bg-purple-500/20 rounded-xl">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+              <div class="p-2 sm:p-3 bg-purple-500/20 rounded-xl">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
                 </svg>
               </div>
               <span class="text-purple-400 text-xs font-bold">{{ projectsWithGithubPercent }}%</span>
             </div>
-            <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Sur GitHub</h3>
-            <p class="text-3xl font-black text-gray-900 dark:text-white">{{ projectsWithGithub }}</p>
+            <h3 class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-medium mb-1">Sur GitHub</h3>
+            <p class="text-xl sm:text-3xl font-black text-gray-900 dark:text-white">{{ projectsWithGithub }}</p>
           </div>
 
           <!-- Projets avec Demo -->
-          <div class="bg-gradient-to-br from-orange-500/10 to-orange-600/5 backdrop-blur-md rounded-2xl p-6 border border-orange-500/20 hover:border-orange-500/40 transition-all hover:scale-105 cursor-pointer">
+          <div class="bg-gradient-to-br from-orange-500/10 to-orange-600/5 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-6 border border-orange-500/20 hover:border-orange-500/40 transition-all hover:scale-105 cursor-pointer">
             <div class="flex items-center justify-between mb-2">
               <div class="p-3 bg-orange-500/20 rounded-xl">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -140,56 +140,56 @@
               </div>
               <span class="text-orange-400 text-xs font-bold">LIVE</span>
             </div>
-            <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Avec Demo</h3>
-            <p class="text-3xl font-black text-gray-900 dark:text-white">{{ projectsWithDemo }}</p>
+            <h3 class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-medium mb-1">Avec Demo</h3>
+            <p class="text-xl sm:text-3xl font-black text-gray-900 dark:text-white">{{ projectsWithDemo }}</p>
           </div>
         </div>
 
         <!-- Graphiques ECharts -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <!-- Graphique Visiteurs -->
-          <div class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 border border-white/5">
+          <div class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-6 border border-white/5">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
               <span class="w-2 h-6 bg-emerald-500 rounded-full mr-3"></span>
               Visiteurs (30 derniers jours)
             </h3>
-            <v-chart :option="visitorsChartOption" autoresize class="h-80" />
+            <v-chart :option="visitorsChartOption" autoresize class="h-64 sm:h-80" />
           </div>
 
           <!-- Graphique Projets les plus vus -->
-          <div class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 border border-white/5">
+          <div class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-6 border border-white/5">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
               <span class="w-2 h-6 bg-blue-500 rounded-full mr-3"></span>
               Projets les plus vus
             </h3>
-            <v-chart :option="topProjectsChartOption" autoresize class="h-80" />
+            <v-chart :option="topProjectsChartOption" autoresize class="h-64 sm:h-80" />
           </div>
         </div>
 
         <!-- Actions Rapides -->
-        <div class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 border border-white/5 mb-8">
+        <div class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-6 border border-white/5 mb-8">
           <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
             <span class="w-2 h-6 bg-purple-500 rounded-full mr-3"></span>
             Actions Rapides
           </h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <button
               @click="openCreateForm"
-              class="flex items-center justify-center space-x-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white py-3 rounded-2xl transition-all shadow-lg shadow-emerald-500/20 font-semibold hover:scale-[1.02] text-sm"
+              class="flex items-center justify-center space-x-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all shadow-lg shadow-emerald-500/20 font-semibold hover:scale-[1.02] text-sm"
             >
               <span class="flex justify-center"><Plus :size="24" /></span>
               <span>Ajouter un projet</span>
             </button>
             <button
               @click="refreshData"
-              class="flex items-center justify-center space-x-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white py-3 rounded-2xl transition-all shadow-lg shadow-blue-500/20 font-semibold hover:scale-[1.02] text-sm"
+              class="flex items-center justify-center space-x-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all shadow-lg shadow-blue-500/20 font-semibold hover:scale-[1.02] text-sm"
             >
               <span class="flex justify-center"><RefreshCw class="group-hover:rotate-180 transition-transform duration-500" :size="24" /></span>
               <span>Rafraîchir</span>
             </button>
             <button
               @click="goToApiDocs"
-              class="flex items-center justify-center space-x-3 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white py-3 rounded-2xl transition-all shadow-lg shadow-purple-500/20 font-semibold hover:scale-[1.02] text-sm"
+              class="flex items-center justify-center space-x-3 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all shadow-lg shadow-purple-500/20 font-semibold hover:scale-[1.02] text-sm"
             >
               <span class="flex justify-center"><BookOpen :size="24" /></span>
               <span>API Docs</span>
@@ -313,7 +313,7 @@
       <!-- Section Projets -->
       <div v-if="isLoggedIn" class="mt-12 bg-gray-200 dark:bg-gray-800/30 rounded-3xl p-8 border border-white/5">
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <h3 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight flex items-center">
+          <h3 class="text-xl sm:text-2xl font-black text-gray-900 dark:text-white tracking-tight flex items-center">
             <span class="w-2 h-8 bg-emerald-500 rounded-full mr-4"></span>
             Projets 
             <span class="ml-3 text-sm font-medium text-gray-500 uppercase tracking-widest">({{ projects.length }})</span>
@@ -326,11 +326,11 @@
           </button>
         </div>
 
-        <div v-if="showProjects" class="flex overflow-x-auto gap-8 pb-10 px-2 scroll-smooth custom-carousel">
+        <div v-if="showProjects" class="flex overflow-x-auto gap-4 sm:gap-8 pb-6 sm:pb-10 px-1 sm:px-2 scroll-smooth custom-carousel">
           <div 
             v-for="project in projects" 
             :key="project.id" 
-            class="flex-none w-80 h-[450px] relative rounded-[2rem] overflow-hidden group shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-emerald-500/10 border border-white/5 bg-gray-200 dark:bg-gray-800"
+            class="flex-none w-[260px] sm:w-80 h-[360px] sm:h-[450px] relative rounded-2xl sm:rounded-[2rem] overflow-hidden group shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-emerald-500/10 border border-white/5 bg-gray-200 dark:bg-gray-800"
           >
             <!-- Image de fond -->
             <img 
@@ -347,7 +347,7 @@
             <!-- Contenu -->
             <div class="absolute inset-x-0 bottom-0 p-8 pt-20">
               <div class="relative overflow-hidden mb-3">
-                <h4 class="text-2xl font-black text-gray-900 dark:text-white shrink-0 drop-shadow-lg transition-all duration-500 line-clamp-2 break-all">
+                <h4 class="text-xl sm:text-2xl font-black text-gray-900 dark:text-white shrink-0 drop-shadow-lg transition-all duration-500 line-clamp-2 break-all">
                   {{ project.project_name }}
                 </h4>
               </div>
@@ -359,7 +359,7 @@
               <div class="flex gap-3 translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
                 <button 
                   @click="editProject(project)"
-                  class="flex-1 bg-white text-gray-900 py-3 rounded-2xl font-bold text-sm transition-all hover:bg-emerald-500 hover:text-white shadow-xl active:scale-95"
+                  class="flex-1 bg-white text-gray-900 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-sm transition-all hover:bg-emerald-500 hover:text-white shadow-xl active:scale-95"
                 >
                   Détails / Éditer
                 </button>
@@ -376,7 +376,7 @@
             </div>
           </div>
           
-          <div v-if="projects.length === 0" class="flex-none w-80 h-[450px] rounded-[2rem] border-2 border-dashed border-gray-300 dark:border-gray-700/50 flex flex-col items-center justify-center text-gray-500 italic bg-gray-200 dark:bg-gray-800/10">
+          <div v-if="projects.length === 0" class="flex-none w-[260px] sm:w-80 h-[360px] sm:h-[450px] rounded-2xl sm:rounded-[2rem] border-2 border-dashed border-gray-300 dark:border-gray-700/50 flex flex-col items-center justify-center text-gray-500 italic bg-gray-200 dark:bg-gray-800/10">
             <Rocket class="mb-6 opacity-30 grayscale" :size="64" />
             <span class="font-bold tracking-widest text-xs uppercase">Aucun projet</span>
           </div>
@@ -386,7 +386,7 @@
       <!-- Section Technologies -->
       <div v-if="isLoggedIn" class="mt-8 bg-gray-200 dark:bg-gray-800/30 rounded-3xl p-8 border border-white/5 mb-12">
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <h3 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight flex items-center">
+          <h3 class="text-xl sm:text-2xl font-black text-gray-900 dark:text-white tracking-tight flex items-center">
             <span class="w-2 h-8 bg-blue-500 rounded-full mr-4"></span>
             Technologies
             <span class="ml-3 text-sm font-medium text-gray-500 uppercase tracking-widest">({{ technologies.length }})</span>
@@ -404,8 +404,8 @@
           <button type="submit" :disabled="loading" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition-colors font-semibold shadow-lg shadow-blue-500/20 disabled:opacity-50">Ajouter</button>
         </form>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          <div v-for="tech in technologies" :key="tech.id" class="bg-gray-100 dark:bg-gray-700/50 rounded-2xl p-4 flex justify-between items-center group border border-white/5 hover:border-blue-500/50 transition-all hover:bg-gray-100 dark:bg-gray-700 shadow-md">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+          <div v-for="tech in technologies" :key="tech.id" class="bg-gray-100 dark:bg-gray-700/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex justify-between items-center group border border-white/5 hover:border-blue-500/50 transition-all hover:bg-gray-100 dark:bg-gray-700 shadow-md">
             <span class="text-sm font-semibold text-gray-800 dark:text-gray-200 truncate">{{ tech.nom }}</span>
             <button @click="askDeleteTechnology(tech.id)" class="text-gray-500 dark:text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all hover:scale-110 focus:opacity-100" title="Supprimer">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
