@@ -1,0 +1,92 @@
+{
+  "nav": {
+    "home": "Home",
+    "skills": "Skills",
+    "portfolio": "Portfolio",
+    "services": "Services",
+    "contact": "Contact",
+    "identifiants": "Profiles",
+    "admin": "Admin"
+  },
+  "hero": {
+    "title_1": "Junior Web",
+    "title_2": "Developer",
+    "subtitle": "Building modern web applications with cutting-edge technologies",
+    "btn_portfolio": "View my projects",
+    "btn_contact": "Contact me"
+  },
+  "skills": {
+    "title": "My Skills",
+    "subtitle": "Technologies I master",
+    "empty": "No technologies added yet."
+  },
+  "portfolio": {
+    "title": "My Projects",
+    "subtitle": "Discover my recent works",
+    "loading_1": "Loading projects...",
+    "loading_2": "Connecting to server...",
+    "loading_3": "Server is waking up, please wait...",
+    "loading_4": "Almost ready...",
+    "loading_delay": "The server may take ~30s to start",
+    "retry": "Retry",
+    "empty": "No projects published yet.",
+    "view_code": "View Code",
+    "view_demo": "View Demo",
+    "no_image": "No image available",
+    "error": "Failed to load data. The server might be starting up."
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Custom solutions for your business",
+    "dev_title": "Web Development",
+    "dev_desc": "Showcase sites, web apps, e-commerce platforms",
+    "auto_title": "Automation",
+    "auto_desc": "Python scripts, web scraping, data processing",
+    "maint_title": "Maintenance",
+    "maint_desc": "Audit, optimization, bug fixes"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Let's discuss your project",
+    "name": "Name",
+    "name_ph": "Your name",
+    "email": "Email",
+    "email_ph": "your email",
+    "project_type": "Project Type",
+    "select_ph": "Select...",
+    "type_showcase": "Showcase Site",
+    "type_webapp": "Web App",
+    "type_ecommerce": "E-commerce",
+    "type_other": "Other",
+    "message": "Message",
+    "message_ph": "Describe your project...",
+    "btn_send": "Send Message",
+    "btn_sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "Error sending the message"
+  },
+  "identifiants": {
+    "title": "Personal Profiles",
+    "subtitle": "Find me on professional platforms",
+    "github_desc": "My open source projects portfolio",
+    "github_btn": "View GitHub",
+    "linkedin_desc": "My professional profile and experience",
+    "linkedin_btn": "View LinkedIn",
+    "email_desc": "Direct contact for your projects",
+    "whatsapp_desc": "Chat directly with me",
+    "whatsapp_btn": "Open WhatsApp",
+    "location_title": "Location",
+    "location_desc": "Available for remote work and in Paris",
+    "availability_title": "Availability",
+    "availability_desc": "Open to freelance projects and collaborations"
+  },
+  "footer": {
+    "contact": "Contact",
+    "networks": "Networks",
+    "info": "Information",
+    "dev_role": "Junior Fullstack Developer",
+    "specialty": "Specialized in Vue.js & Django",
+    "availability": "Available for freelance missions",
+    "copyright": "© 2026 Brady Frasnel Portfolio. All rights reserved."
+  }
+}

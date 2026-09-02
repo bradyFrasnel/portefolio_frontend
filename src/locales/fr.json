@@ -1,0 +1,92 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "skills": "Compétences",
+    "portfolio": "Portfolio",
+    "services": "Services",
+    "contact": "Contact",
+    "identifiants": "Identifiants",
+    "admin": "Admin"
+  },
+  "hero": {
+    "title_1": "Développeur",
+    "title_2": "Web junior",
+    "subtitle": "Création d'applications web modernes avec des technologies de pointes",
+    "btn_portfolio": "Voir mes projets",
+    "btn_contact": "Me contacter"
+  },
+  "skills": {
+    "title": "Mes Compétences",
+    "subtitle": "Les technologies que je maîtrise",
+    "empty": "Aucune technologie ajoutée pour le moment."
+  },
+  "portfolio": {
+    "title": "Projets réalisés",
+    "subtitle": "Découvrez mes réalisations récentes",
+    "loading_1": "Chargement des projets...",
+    "loading_2": "Connexion au serveur...",
+    "loading_3": "Le serveur se réveille, patientez...",
+    "loading_4": "Presque prêt...",
+    "loading_delay": "Le serveur peut prendre ~30s au démarrage",
+    "retry": "Réessayer",
+    "empty": "Aucun projet publié pour le moment.",
+    "view_code": "Voir le code",
+    "view_demo": "Voir la démo",
+    "no_image": "Aucune image disponible",
+    "error": "Impossible de charger les données. Le serveur peut être en cours de démarrage."
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Des solutions sur mesure pour votre entreprise",
+    "dev_title": "Développement Web",
+    "dev_desc": "Sites vitrines, applications web, plateformes e-commerce",
+    "auto_title": "Automatisation",
+    "auto_desc": "Scripts Python, web scraping, traitement de données",
+    "maint_title": "Maintenance",
+    "maint_desc": "Audit, optimisation, corrections de bugs"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Discutons de votre projet",
+    "name": "Nom",
+    "name_ph": "Votre nom",
+    "email": "Email",
+    "email_ph": "votre email",
+    "project_type": "Type de projet",
+    "select_ph": "Sélectionnez...",
+    "type_showcase": "Site vitrine",
+    "type_webapp": "Application web",
+    "type_ecommerce": "E-commerce",
+    "type_other": "Autre",
+    "message": "Message",
+    "message_ph": "Décrivez votre projet...",
+    "btn_send": "Envoyer le message",
+    "btn_sending": "Envoi en cours...",
+    "success": "Message envoyé avec succès !",
+    "error": "Erreur lors de l'envoi du message"
+  },
+  "identifiants": {
+    "title": "Identifiants Personnel",
+    "subtitle": "Retrouvez-moi sur les plateformes professionnelles",
+    "github_desc": "Mon portfolio de projets open source",
+    "github_btn": "Voir GitHub",
+    "linkedin_desc": "Mon profil professionnel et expériences",
+    "linkedin_btn": "Voir LinkedIn",
+    "email_desc": "Contact direct pour vos projets",
+    "whatsapp_desc": "Discutez directement avec moi",
+    "whatsapp_btn": "Ouvrir WhatsApp",
+    "location_title": "Localisation",
+    "location_desc": "Disponible pour missions en remote et sur Paris",
+    "availability_title": "Disponibilité",
+    "availability_desc": "Ouvert aux projets freelance et collaborations"
+  },
+  "footer": {
+    "contact": "Contact",
+    "networks": "Réseaux",
+    "info": "Informations",
+    "dev_role": "Développeur Fullstack Junior",
+    "specialty": "Spécialisé Vue.js & Django",
+    "availability": "Disponible pour missions freelance",
+    "copyright": "© 2026 Brady Frasnel Portfolio. Tous droits réservés."
+  }
+}

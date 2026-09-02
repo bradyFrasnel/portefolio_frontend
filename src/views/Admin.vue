@@ -1,6 +1,26 @@
 <template>
-  <div class="min-h-screen bg-gray-900 text-white p-8 flex items-center justify-center">
-    <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 text-white p-8 flex flex-col relative">
+    
+    <!-- Toast Notification -->
+    <div v-if="toast.show" 
+         :class="['fixed top-4 right-4 z-[60] px-6 py-3 rounded-xl shadow-lg transition-all transform', 
+                  toast.type === 'success' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white']">
+      {{ toast.message }}
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div v-if="showDeleteConfirm" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+      <div class="bg-gray-200 dark:bg-gray-800 rounded-3xl p-6 md:p-8 max-w-sm w-full shadow-2xl border border-white/10">
+        <h3 class="text-xl font-bold text-white mb-4">Confirmer la suppression</h3>
+        <p class="text-gray-700 dark:text-gray-300 mb-6">Voulez-vous vraiment supprimer cet élément ? Cette action est irréversible.</p>
+        <div class="flex justify-end gap-3">
+          <button @click="showDeleteConfirm = false" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-600 text-white rounded-xl text-sm transition-colors">Annuler</button>
+          <button @click="confirmDelete" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm transition-colors">Supprimer</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col justify-center">
       <div class="flex justify-end mb-6">
         <button 
           v-if="isLoggedIn" 
@@ -12,33 +32,33 @@
       </div>
 
       <!-- Connexion -->
-      <div v-if="!isLoggedIn" class="bg-gray-800 rounded-3xl p-6 md:p-8 mb-8 w-full max-w-sm mx-auto shadow-xl shadow-black/20 border border-white/10">
+      <div v-if="!isLoggedIn" class="bg-gray-200 dark:bg-gray-800 rounded-3xl p-6 md:p-8 mb-8 w-full max-w-sm mx-auto shadow-xl shadow-black/20 border border-white/10">
         <h2 class="text-xl font-semibold mb-5 text-emerald-500">Connexion Admin</h2>
         <form @submit.prevent="login" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">Nom d'utilisateur</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nom d'utilisateur</label>
             <input
               v-model="loginForm.username"
               type="text"
               required
-              class="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+              class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
               placeholder="admin"
             />
           </div>
           <div class="relative">
-            <label class="block text-sm font-medium text-gray-300 mb-2">Mot de passe</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Mot de passe</label>
             <div class="relative">
               <input
                 v-model="loginForm.password"
                 :type="showPassword ? 'text' : 'password'"
                 required
-                class="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white pr-10"
+                class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white pr-10"
                 placeholder="••••••••"
               />
               <button
                 type="button"
                 @click="showPassword = !showPassword"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-emerald-500 focus:outline-none"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-gray-400 hover:text-emerald-500 focus:outline-none"
               >
                 <!-- Eye icon (visible) -->
                 <svg v-if="!showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -78,7 +98,7 @@
               </div>
               <span class="text-emerald-400 text-xs font-bold">+{{ projectsThisMonth }}</span>
             </div>
-            <h3 class="text-gray-400 text-sm font-medium mb-1">Total Projets</h3>
+            <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Total Projets</h3>
             <p class="text-3xl font-black text-white">{{ projects.length }}</p>
           </div>
 
@@ -92,7 +112,7 @@
               </div>
               <span class="text-blue-400 text-xs font-bold">STACK</span>
             </div>
-            <h3 class="text-gray-400 text-sm font-medium mb-1">Technologies</h3>
+            <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Technologies</h3>
             <p class="text-3xl font-black text-white">{{ uniqueTechnologies }}</p>
           </div>
 
@@ -106,7 +126,7 @@
               </div>
               <span class="text-purple-400 text-xs font-bold">{{ projectsWithGithubPercent }}%</span>
             </div>
-            <h3 class="text-gray-400 text-sm font-medium mb-1">Sur GitHub</h3>
+            <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Sur GitHub</h3>
             <p class="text-3xl font-black text-white">{{ projectsWithGithub }}</p>
           </div>
 
@@ -120,58 +140,58 @@
               </div>
               <span class="text-orange-400 text-xs font-bold">LIVE</span>
             </div>
-            <h3 class="text-gray-400 text-sm font-medium mb-1">Avec Demo</h3>
+            <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Avec Demo</h3>
             <p class="text-3xl font-black text-white">{{ projectsWithDemo }}</p>
           </div>
         </div>
 
         <!-- Graphiques ECharts -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <!-- Graphique Technologies -->
-          <div class="bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 border border-white/5">
+          <!-- Graphique Visiteurs -->
+          <div class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 border border-white/5">
             <h3 class="text-xl font-bold text-white mb-4 flex items-center">
               <span class="w-2 h-6 bg-emerald-500 rounded-full mr-3"></span>
-              Technologies les plus utilisées
+              Visiteurs (30 derniers jours)
             </h3>
-            <v-chart :option="technologiesChartOption" autoresize class="h-80" />
+            <v-chart :option="visitorsChartOption" autoresize class="h-80" />
           </div>
 
-          <!-- Graphique Projets par mois -->
-          <div class="bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 border border-white/5">
+          <!-- Graphique Projets les plus vus -->
+          <div class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 border border-white/5">
             <h3 class="text-xl font-bold text-white mb-4 flex items-center">
               <span class="w-2 h-6 bg-blue-500 rounded-full mr-3"></span>
-              Projets créés par mois
+              Projets les plus vus
             </h3>
-            <v-chart :option="projectsPerMonthChartOption" autoresize class="h-80" />
+            <v-chart :option="topProjectsChartOption" autoresize class="h-80" />
           </div>
         </div>
 
         <!-- Actions Rapides -->
-        <div class="bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 border border-white/5 mb-8">
+        <div class="bg-gray-200 dark:bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 border border-white/5 mb-8">
           <h3 class="text-xl font-bold text-white mb-4 flex items-center">
             <span class="w-2 h-6 bg-purple-500 rounded-full mr-3"></span>
             Actions Rapides
           </h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <button
-              @click="showCreateForm = !showCreateForm"
+              @click="openCreateForm"
               class="flex items-center justify-center space-x-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white py-3 rounded-2xl transition-all shadow-lg shadow-emerald-500/20 font-semibold hover:scale-[1.02] text-sm"
             >
-              <span class="text-2xl">➕</span>
+              <span class="flex justify-center"><Plus :size="24" /></span>
               <span>Ajouter un projet</span>
             </button>
             <button
               @click="refreshData"
               class="flex items-center justify-center space-x-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white py-3 rounded-2xl transition-all shadow-lg shadow-blue-500/20 font-semibold hover:scale-[1.02] text-sm"
             >
-              <span class="text-2xl group-hover:rotate-180 transition-transform duration-500">🔄</span>
+              <span class="flex justify-center"><RefreshCw class="group-hover:rotate-180 transition-transform duration-500" :size="24" /></span>
               <span>Rafraîchir</span>
             </button>
             <button
               @click="goToApiDocs"
               class="flex items-center justify-center space-x-3 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white py-3 rounded-2xl transition-all shadow-lg shadow-purple-500/20 font-semibold hover:scale-[1.02] text-sm"
             >
-              <span class="text-2xl">📚</span>
+              <span class="flex justify-center"><BookOpen :size="24" /></span>
               <span>API Docs</span>
             </button>
           </div>
@@ -179,25 +199,25 @@
       </div>
 
       <!-- Formulaire de création de projet -->
-      <div v-if="showCreateForm" class="mt-8 bg-gray-800 rounded-3xl p-5 md:p-6 max-w-2xl mx-auto shadow-lg shadow-black/20">
-        <h3 class="text-xl md:text-2xl font-bold mb-5 text-emerald-500">Déposer un Nouveau Projet</h3>
+      <div v-if="showCreateForm" class="mt-8 bg-gray-200 dark:bg-gray-800 rounded-3xl p-5 md:p-6 max-w-2xl mx-auto shadow-lg shadow-black/20">
+        <h3 class="text-xl md:text-2xl font-bold mb-5 text-emerald-500">{{ editingProject ? 'Modifier le projet' : 'Déposer un Nouveau Projet' }}</h3>
         <form @submit.prevent="createProject" class="space-y-4 text-sm">
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">Titre du Projet</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Titre du Projet</label>
             <input
               v-model="projectForm.project_name"
               type="text"
               required
-              class="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+              class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
               placeholder="Ex: Portfolio Moderne"
             />
           </div>
           
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">Image du projet (Upload Cloudinary)</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Image du projet (Upload Cloudinary)</label>
             <div class="flex flex-col md:flex-row md:items-center gap-4">
               <label class="flex-1 cursor-pointer">
-                <div class="flex items-center justify-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-xl hover:bg-gray-600 transition-colors text-gray-300 text-sm">
+                <div class="flex items-center justify-center px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-600 transition-colors text-gray-700 dark:text-gray-300 text-sm">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                   </svg>
@@ -222,49 +242,49 @@
             
             <!-- Previsualisation image -->
             <div v-if="imagePreviewUrl" class="mt-4">
-              <p class="text-xs text-gray-400 mb-2">Aperçu :</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Aperçu :</p>
               <img :src="imagePreviewUrl" class="h-36 rounded-xl border border-white/10 object-cover shadow-lg" />
             </div>
           </div>
           
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">Description</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
             <textarea
               v-model="projectForm.project_description"
               required
               rows="4"
-              class="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+              class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
               placeholder="Description complète du projet"
             ></textarea>
           </div>
           
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">Technologies utilisées (séparées par des virgules)</label>
-            <input
-              v-model="projectForm.technology_used"
-              type="text"
-              required
-              class="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
-              placeholder="Django, Vue.js, Supabase"
-            />
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Technologies (Cochez celles utilisées)</label>
+            <div class="grid grid-cols-2 gap-2 mt-2 max-h-40 overflow-y-auto p-2 bg-gray-200 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600">
+              <label v-for="tech in technologies" :key="tech.id" class="flex items-center space-x-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:text-white transition-colors">
+                <input type="checkbox" :value="tech.id" v-model="projectForm.technologies" class="rounded text-blue-500 focus:ring-blue-500 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600">
+                <span>{{ tech.nom }}</span>
+              </label>
+            </div>
+            <p v-if="technologies.length === 0" class="text-xs text-yellow-500 mt-1">Aucune technologie trouvée. Ajoutez-en d'abord dans la section Technologies en bas.</p>
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">Lien GitHub</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Lien GitHub</label>
               <input
                 v-model="projectForm.github_link"
                 type="url"
-                class="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+                class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
                 placeholder="https://github.com/..."
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">Lien Demo</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Lien Demo</label>
               <input
                 v-model="projectForm.demo_link"
                 type="url"
-                class="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
+                class="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white"
                 placeholder="https://demo.exemple.com"
               />
             </div>
@@ -277,13 +297,13 @@
               :disabled="loading"
               class="bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-5 rounded-xl text-sm disabled:opacity-50"
             >
-              <span v-if="!loading">Déposer</span>
-              <span v-else>Création...</span>
+              <span v-if="!loading">{{ editingProject ? 'Modifier' : 'Déposer' }}</span>
+              <span v-else>{{ editingProject ? 'Modification...' : 'Création...' }}</span>
             </button>
             <button
               type="button"
-              @click="showCreateForm = false"
-              class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-5 rounded-xl text-sm"
+              @click="cancelEdit"
+              class="bg-gray-600 hover:bg-gray-100 dark:bg-gray-700 text-white py-2 px-5 rounded-xl text-sm"
             >
               Annuler
             </button>
@@ -291,7 +311,7 @@
         </form>
       </div>
       <!-- Section Projets -->
-      <div v-if="isLoggedIn" class="mt-12 bg-gray-800/30 rounded-3xl p-8 border border-white/5">
+      <div v-if="isLoggedIn" class="mt-12 bg-gray-200 dark:bg-gray-800/30 rounded-3xl p-8 border border-white/5">
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
           <h3 class="text-2xl font-black text-white tracking-tight flex items-center">
             <span class="w-2 h-8 bg-emerald-500 rounded-full mr-4"></span>
@@ -300,7 +320,7 @@
           </h3>
           <button
             @click="showProjects = !showProjects"
-            class="px-6 py-2 rounded-full border border-gray-700 hover:border-emerald-500 text-gray-400 hover:text-emerald-500 transition-all text-sm font-bold"
+            class="px-6 py-2 rounded-full border border-gray-300 dark:border-gray-700 hover:border-emerald-500 text-gray-500 dark:text-gray-400 hover:text-emerald-500 transition-all text-sm font-bold"
           >
             {{ showProjects ? 'Masquer les projets' : 'Afficher les projets' }}
           </button>
@@ -310,7 +330,7 @@
           <div 
             v-for="project in projects" 
             :key="project.id" 
-            class="flex-none w-80 h-[450px] relative rounded-[2rem] overflow-hidden group shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-emerald-500/10 border border-white/5 bg-gray-800"
+            class="flex-none w-80 h-[450px] relative rounded-[2rem] overflow-hidden group shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-emerald-500/10 border border-white/5 bg-gray-200 dark:bg-gray-800"
           >
             <!-- Image de fond -->
             <img 
@@ -331,7 +351,7 @@
                   {{ project.project_name }}
                 </h4>
               </div>
-              <p class="text-sm text-gray-400 line-clamp-2 group-hover:line-clamp-none transition-all duration-500 mb-6 font-medium">
+              <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 group-hover:line-clamp-none transition-all duration-500 mb-6 font-medium">
                 {{ project.project_description }}
               </p>
               
@@ -344,7 +364,7 @@
                   Détails / Éditer
                 </button>
                 <button 
-                  @click="deleteProject(project.id)"
+                  @click="askDeleteProject(project.id)"
                   class="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white p-3 rounded-2xl transition-all border border-red-500/20 shadow-xl active:scale-95"
                   title="Supprimer"
                 >
@@ -356,9 +376,45 @@
             </div>
           </div>
           
-          <div v-if="projects.length === 0" class="flex-none w-80 h-[450px] rounded-[2rem] border-2 border-dashed border-gray-700/50 flex flex-col items-center justify-center text-gray-500 italic bg-gray-800/10">
-            <span class="text-6xl mb-6 grayscale opacity-30">🚀</span>
+          <div v-if="projects.length === 0" class="flex-none w-80 h-[450px] rounded-[2rem] border-2 border-dashed border-gray-300 dark:border-gray-700/50 flex flex-col items-center justify-center text-gray-500 italic bg-gray-200 dark:bg-gray-800/10">
+            <Rocket class="mb-6 opacity-30 grayscale" :size="64" />
             <span class="font-bold tracking-widest text-xs uppercase">Aucun projet</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section Technologies -->
+      <div v-if="isLoggedIn" class="mt-8 bg-gray-200 dark:bg-gray-800/30 rounded-3xl p-8 border border-white/5 mb-12">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+          <h3 class="text-2xl font-black text-white tracking-tight flex items-center">
+            <span class="w-2 h-8 bg-blue-500 rounded-full mr-4"></span>
+            Technologies
+            <span class="ml-3 text-sm font-medium text-gray-500 uppercase tracking-widest">({{ technologies.length }})</span>
+          </h3>
+        </div>
+        
+        <form @submit.prevent="createTechnology" class="flex gap-4 mb-8 max-w-xl">
+          <input 
+            v-model="newTechName" 
+            type="text" 
+            required 
+            placeholder="Nouvelle technologie (ex: Vue.js)" 
+            class="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-white shadow-inner"
+          />
+          <button type="submit" :disabled="loading" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition-colors font-semibold shadow-lg shadow-blue-500/20 disabled:opacity-50">Ajouter</button>
+        </form>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div v-for="tech in technologies" :key="tech.id" class="bg-gray-100 dark:bg-gray-700/50 rounded-2xl p-4 flex justify-between items-center group border border-white/5 hover:border-blue-500/50 transition-all hover:bg-gray-100 dark:bg-gray-700 shadow-md">
+            <span class="text-sm font-semibold text-gray-800 dark:text-gray-200 truncate">{{ tech.nom }}</span>
+            <button @click="askDeleteTechnology(tech.id)" class="text-gray-500 dark:text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all hover:scale-110 focus:opacity-100" title="Supprimer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </div>
+          <div v-if="technologies.length === 0" class="col-span-full py-8 text-center text-gray-500 italic">
+            Aucune technologie enregistrée.
           </div>
         </div>
       </div>
@@ -380,6 +436,7 @@ import {
 import VChart from 'vue-echarts'
 import api from '../services/api.js'
 import { parseProjectsResponse } from '../utils/projects.js'
+import { Plus, RefreshCw, BookOpen, Rocket } from 'lucide-vue-next'
 
 // Enregistrer les composants ECharts
 use([
@@ -396,7 +453,11 @@ use([
 export default {
   name: 'Admin',
   components: {
-    VChart
+    VChart,
+    Plus,
+    RefreshCw,
+    BookOpen,
+    Rocket
   },
   setup() {
     const isLoggedIn = ref(false)
@@ -406,7 +467,20 @@ export default {
     const showCreateForm = ref(false)
     const showPassword = ref(false)
     const projects = ref([])
+    const technologies = ref([])
+    const newTechName = ref('')
     const localPreview = ref('')
+    const editingProject = ref(null)
+
+    const toast = ref({ show: false, message: '', type: 'success' })
+    const showDeleteConfirm = ref(false)
+    const itemToDelete = ref(null)
+    const deleteType = ref('')
+
+    const showToast = (message, type = 'success') => {
+      toast.value = { show: true, message, type }
+      setTimeout(() => { toast.value.show = false }, 3000)
+    }
 
     const loginForm = ref({
       username: '',
@@ -417,7 +491,7 @@ export default {
       project_name: '',
       project_description: '',
       project_image: '',
-      technology_used: '',
+      technologies: [],
       github_link: '',
       demo_link: ''
     })
@@ -439,10 +513,7 @@ export default {
     })
 
     const uniqueTechnologies = computed(() => {
-      const allTechs = projects.value.flatMap(p => 
-        p.technology_used.split(',').map(t => t.trim())
-      )
-      return new Set(allTechs).size
+      return technologies.value.length
     })
 
     const projectsWithGithub = computed(() => {
@@ -458,182 +529,101 @@ export default {
       return projects.value.filter(p => p.demo_link && p.demo_link.trim() !== '').length
     })
 
-    // Configuration graphique des technologies
-    const technologiesChartOption = computed(() => {
-      // Compter les technologies
-      const techCount = {}
-      projects.value.forEach(project => {
-        const techs = project.technology_used.split(',').map(t => t.trim())
-        techs.forEach(tech => {
-          if (tech) {
-            techCount[tech] = (techCount[tech] || 0) + 1
-          }
-        })
-      })
+    const analyticsStats = ref(null)
 
-      // Convertir en array et trier
-      const data = Object.entries(techCount)
-        .map(([name, value]) => ({ name, value }))
-        .sort((a, b) => b.value - a.value)
-        .slice(0, 8) // Top 8 technologies
+    // Configuration graphique visiteurs
+    const visitorsChartOption = computed(() => {
+      const data = analyticsStats.value?.visitors_timeline || []
+      const dates = data.map(item => {
+        const d = new Date(item.date)
+        return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })
+      })
+      const visitors = data.map(item => item.visitors)
 
       return {
         tooltip: {
-          trigger: 'item',
-          formatter: '{b}: {c} ({d}%)',
+          trigger: 'axis',
           backgroundColor: 'rgba(17, 24, 39, 0.95)',
           borderColor: '#10b981',
           borderWidth: 1,
-          textStyle: {
-            color: '#fff'
-          }
+          textStyle: { color: '#fff' }
         },
-        legend: {
-          orient: 'vertical',
-          right: '10%',
-          top: 'center',
-          textStyle: {
-            color: '#9ca3af'
-          }
+        grid: { left: '3%', right: '4%', bottom: '3%', top: '10%', containLabel: true },
+        xAxis: {
+          type: 'category',
+          data: dates,
+          axisLabel: { color: '#9ca3af', rotate: 45 },
+          axisLine: { lineStyle: { color: '#374151' } }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: { color: '#9ca3af' },
+          axisLine: { lineStyle: { color: '#374151' } },
+          splitLine: { lineStyle: { color: '#374151', type: 'dashed' } }
         },
         series: [
           {
-            type: 'pie',
-            radius: ['40%', '70%'],
-            center: ['35%', '50%'],
-            avoidLabelOverlap: false,
-            itemStyle: {
-              borderRadius: 10,
-              borderColor: '#1f2937',
-              borderWidth: 2
-            },
-            label: {
-              show: false
-            },
-            emphasis: {
-              label: {
-                show: true,
-                fontSize: 16,
-                fontWeight: 'bold',
-                color: '#fff'
-              },
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(16, 185, 129, 0.5)'
+            name: 'Visiteurs uniques',
+            type: 'line',
+            smooth: true,
+            data: visitors,
+            itemStyle: { color: '#10b981' },
+            areaStyle: {
+              color: {
+                type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+                colorStops: [
+                  { offset: 0, color: 'rgba(16, 185, 129, 0.5)' },
+                  { offset: 1, color: 'rgba(16, 185, 129, 0.0)' }
+                ]
               }
-            },
-            labelLine: {
-              show: false
-            },
-            data: data,
-            color: ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#84cc16']
+            }
           }
         ]
       }
     })
 
-    // Configuration graphique projets par mois
-    const projectsPerMonthChartOption = computed(() => {
-      // Grouper les projets par mois
-      const monthCount = {}
-      projects.value.forEach(project => {
-        const date = new Date(project.date_creation)
-        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
-        monthCount[monthKey] = (monthCount[monthKey] || 0) + 1
-      })
-
-      // Trier par date
-      const sortedMonths = Object.keys(monthCount).sort()
-      const months = sortedMonths.map(key => {
-        const [year, month] = key.split('-')
-        const date = new Date(year, month - 1)
-        return date.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' })
-      })
-      const values = sortedMonths.map(key => monthCount[key])
+    // Configuration graphique top projets
+    const topProjectsChartOption = computed(() => {
+      const data = analyticsStats.value?.top_projects || []
+      const names = data.map(item => item.project_name)
+      const views = data.map(item => item.views)
 
       return {
         tooltip: {
           trigger: 'axis',
-          axisPointer: {
-            type: 'shadow'
-          },
+          axisPointer: { type: 'shadow' },
           backgroundColor: 'rgba(17, 24, 39, 0.95)',
           borderColor: '#3b82f6',
           borderWidth: 1,
-          textStyle: {
-            color: '#fff'
-          }
+          textStyle: { color: '#fff' }
         },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          top: '10%',
-          containLabel: true
-        },
+        grid: { left: '3%', right: '4%', bottom: '3%', top: '10%', containLabel: true },
         xAxis: {
-          type: 'category',
-          data: months,
-          axisLabel: {
-            color: '#9ca3af',
-            rotate: 45
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#374151'
-            }
-          }
+          type: 'value',
+          axisLabel: { color: '#9ca3af' },
+          axisLine: { lineStyle: { color: '#374151' } },
+          splitLine: { lineStyle: { color: '#374151', type: 'dashed' } }
         },
         yAxis: {
-          type: 'value',
-          axisLabel: {
-            color: '#9ca3af'
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#374151'
-            }
-          },
-          splitLine: {
-            lineStyle: {
-              color: '#374151',
-              type: 'dashed'
-            }
-          }
+          type: 'category',
+          data: names,
+          axisLabel: { color: '#9ca3af' },
+          axisLine: { lineStyle: { color: '#374151' } }
         },
         series: [
           {
+            name: 'Vues',
             type: 'bar',
-            data: values,
+            data: views,
             itemStyle: {
               color: {
-                type: 'linear',
-                x: 0,
-                y: 0,
-                x2: 0,
-                y2: 1,
+                type: 'linear', x: 0, y: 0, x2: 1, y2: 0,
                 colorStops: [
                   { offset: 0, color: '#3b82f6' },
                   { offset: 1, color: '#1d4ed8' }
                 ]
               },
-              borderRadius: [8, 8, 0, 0]
-            },
-            emphasis: {
-              itemStyle: {
-                color: {
-                  type: 'linear',
-                  x: 0,
-                  y: 0,
-                  x2: 0,
-                  y2: 1,
-                  colorStops: [
-                    { offset: 0, color: '#60a5fa' },
-                    { offset: 1, color: '#3b82f6' }
-                  ]
-                }
-              }
+              borderRadius: [0, 8, 8, 0]
             }
           }
         ]
@@ -656,11 +646,12 @@ export default {
         
         if (response.data.success) {
           isLoggedIn.value = true
-          // Sauvegarder le token pour l'intercepteur Axios
           if (response.data.token) {
             localStorage.setItem('authToken', response.data.token)
           }
           await loadProjects()
+          await loadTechnologies()
+          await loadAnalytics()
         } else {
           error.value = response.data.message || 'Erreur de connexion'
         }
@@ -672,10 +663,20 @@ export default {
       }
     }
 
+    const loadAnalytics = async () => {
+      try {
+        const response = await api.getAnalyticsStats('30d')
+        analyticsStats.value = response.data
+      } catch (err) {
+        console.error('Erreur chargement analytics:', err)
+      }
+    }
+
     const logout = () => {
       localStorage.removeItem('authToken')
       isLoggedIn.value = false
       projects.value = []
+      technologies.value = []
     }
 
     const loadProjects = async () => {
@@ -687,18 +688,16 @@ export default {
       }
     }
 
-    const loadCategoriesAndTechnologies = async () => {
+    const loadTechnologies = async () => {
       try {
-        const [categoriesResponse, technologiesResponse] = await Promise.all([
-          api.getCategories(),
-          api.getTechnologies()
-        ])
-        categories.value = categoriesResponse.data
-        technologies.value = technologiesResponse.data
+        const response = await api.getTechnologies()
+        technologies.value = response.data.results || response.data
       } catch (err) {
-        console.error('Erreur chargement catégories/technologies:', err)
+        console.error('Erreur chargement technologies:', err)
       }
     }
+
+
     const handleFileChange = (e) => {
       const file = e.target.files[0]
       if (file) {
@@ -708,48 +707,119 @@ export default {
     }
 
 
+    const openCreateForm = () => {
+      editingProject.value = null
+      projectForm.value = {
+        project_name: '',
+        project_description: '',
+        project_image: '',
+        technologies: [],
+        github_link: '',
+        demo_link: ''
+      }
+      localPreview.value = ''
+      showCreateForm.value = true
+    }
+
+    const cancelEdit = () => {
+      showCreateForm.value = false
+      editingProject.value = null
+      projectForm.value = {
+        project_name: '',
+        project_description: '',
+        project_image: '',
+        technologies: [],
+        github_link: '',
+        demo_link: ''
+      }
+      localPreview.value = ''
+    }
+
     const createProject = async () => {
       loading.value = true
       
       try {
-        console.log('Envoi des données:', projectForm.value)
-        
-        const response = await api.createProject(projectForm.value)
-        console.log('Réponse API:', response)
-        showCreateForm.value = false
-        projectForm.value = {
-          project_name: '',
-          project_description: '',
-          project_image: '',
-          technology_used: '',
-          github_link: '',
-          demo_link: ''
+        if (editingProject.value) {
+          await api.updateProject(editingProject.value.id, projectForm.value)
+          showToast('Projet modifié avec succès !', 'success')
+        } else {
+          await api.createProject(projectForm.value)
+          showToast('Projet créé avec succès !', 'success')
         }
-        localPreview.value = ''
+        
+        cancelEdit()
         await loadProjects()
-        alert('Projet créé avec succès !')
       } catch (err) {
-        console.error('Erreur création projet:', err)
+        console.error('Erreur sauvegarde projet:', err)
         console.error('Détails erreur:', err.response?.data)
-        alert(`Erreur: ${err.response?.data?.detail || err.message || 'Erreur lors de la création du projet'}`)
+        showToast(`Erreur: ${err.response?.data?.detail || err.message || 'Erreur lors de la sauvegarde du projet'}`, 'error')
       } finally {
         loading.value = false
       }
     }
 
     const editProject = (project) => {
-      // Logique pour modifier un projet
-      console.log('Modifier projet:', project)
+      editingProject.value = project
+      projectForm.value = {
+        project_name: project.project_name,
+        project_description: project.project_description,
+        project_image: project.image_url || '',
+        technologies: project.technologies_details ? project.technologies_details.map(t => t.id) : [],
+        github_link: project.github_link || '',
+        demo_link: project.demo_link || ''
+      }
+      localPreview.value = project.image_url || ''
+      showCreateForm.value = true
     }
 
-    const deleteProject = async (id) => {
-      if (confirm('Êtes-vous sûr de vouloir supprimer ce projet ?')) {
+    const askDeleteProject = (id) => {
+      deleteType.value = 'project'
+      itemToDelete.value = id
+      showDeleteConfirm.value = true
+    }
+
+    const askDeleteTechnology = (id) => {
+      deleteType.value = 'technology'
+      itemToDelete.value = id
+      showDeleteConfirm.value = true
+    }
+
+    const confirmDelete = async () => {
+      showDeleteConfirm.value = false
+      if (deleteType.value === 'project') {
         try {
-          await api.deleteProject(id)
+          await api.deleteProject(itemToDelete.value)
+          showToast('Projet supprimé avec succès !', 'success')
           await loadProjects()
         } catch (err) {
           console.error('Erreur suppression:', err)
+          showToast('Erreur lors de la suppression', 'error')
         }
+      } else if (deleteType.value === 'technology') {
+        try {
+          await api.deleteTechnology(itemToDelete.value)
+          showToast('Technologie supprimée avec succès !', 'success')
+          await loadTechnologies()
+        } catch (err) {
+          console.error('Erreur suppression tech:', err)
+          showToast('Erreur lors de la suppression', 'error')
+        }
+      }
+    }
+
+    const createTechnology = async () => {
+      if (!newTechName.value.trim()) return
+      loading.value = true
+      try {
+        await api.createTechnology({ nom: newTechName.value })
+        showToast('Technologie ajoutée avec succès !', 'success')
+        newTechName.value = ''
+        await loadTechnologies()
+      } catch (err) {
+        console.error('Erreur ajout technologie:', err)
+        showToast('Erreur lors de l\'ajout de la technologie', 'error')
+      } finally {
+        loading.value = false
       }
     }
 
@@ -771,6 +841,8 @@ export default {
       if (token) {
         isLoggedIn.value = true
         loadProjects()
+        loadTechnologies()
+        loadAnalytics()
       }
     })
 
@@ -781,16 +853,26 @@ export default {
       showProjects,
       showPassword,
       showCreateForm,
+      editingProject,
       projects,
+      technologies,
+      newTechName,
+      toast,
+      showDeleteConfirm,
       loginForm,
       projectForm,
       publishedProjects,
       imagePreviewUrl,
       handleFileChange,
       login,
+      openCreateForm,
+      cancelEdit,
       createProject,
       editProject,
-      deleteProject,
+      askDeleteProject,
+      askDeleteTechnology,
+      confirmDelete,
+      createTechnology,
       refreshData,
       goToPortfolio,
       goToApiDocs,
@@ -802,8 +884,9 @@ export default {
       projectsWithGithubPercent,
       projectsWithDemo,
       // ECharts options
-      technologiesChartOption,
-      projectsPerMonthChartOption
+      visitorsChartOption,
+      topProjectsChartOption,
+      analyticsStats
     }
   }
 }
@@ -838,3 +921,4 @@ export default {
   overflow: hidden;
 }
 </style>
+

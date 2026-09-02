@@ -52,7 +52,9 @@ export default {
     const fd = new FormData()
     fd.append('project_name', data.project_name)
     fd.append('project_description', data.project_description)
-    fd.append('technology_used', data.technology_used)
+    if (data.technologies && data.technologies.length) {
+      data.technologies.forEach(techId => fd.append('technologies', techId))
+    }
     if (data.github_link) fd.append('github_link', data.github_link)
     if (data.demo_link) fd.append('demo_link', data.demo_link)
     if (data.project_image instanceof File) {
@@ -65,7 +67,9 @@ export default {
     const fd = new FormData()
     fd.append('project_name', data.project_name)
     fd.append('project_description', data.project_description)
-    fd.append('technology_used', data.technology_used)
+    if (data.technologies && data.technologies.length) {
+      data.technologies.forEach(techId => fd.append('technologies', techId))
+    }
     if (data.github_link) fd.append('github_link', data.github_link)
     if (data.demo_link) fd.append('demo_link', data.demo_link)
     if (data.project_image instanceof File) {
@@ -102,5 +106,13 @@ export default {
 
   sendContact(data) {
     return api.post('contact/', data)
+  },
+
+  trackEvent(data) {
+    return api.post('analytics/', data)
+  },
+
+  getAnalyticsStats(timeRange = '7d') {
+    return withRetry(() => api.get('analytics/stats/', { params: { time_range: timeRange } }))
   },
 }

@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
-import Admin from '../views/Admin.vue'
 
 const routes = [
   {
@@ -11,7 +10,7 @@ const routes = [
   {
     path: '/admin',
     name: 'Admin',
-    component: Admin
+    component: () => import('../views/Admin.vue')
   }
 ]
 
