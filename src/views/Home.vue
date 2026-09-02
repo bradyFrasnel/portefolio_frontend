@@ -453,6 +453,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Moon, Sun, Menu, X, Monitor, Bot, Wrench, Code, Target, Atom, Palette, Database, Rocket, Frown, Zap } from 'lucide-vue-next'
+import { trackEvent } from '../utils/analytics.js'
 import api from '../services/api.js'
 import { parseProjectsResponse } from '../utils/projects.js'
 
@@ -523,6 +524,7 @@ const scrollToSection = (sectionId) => {
 
 const showProjectDetail = (project) => {
   selectedProject.value = project
+  trackEvent('project_click', project.id)
 }
 
 const closeProjectDetail = () => {
@@ -576,6 +578,7 @@ onMounted(() => {
   if (isDarkMode.value) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark')
   // Charger les projets immédiatement au montage
   loadData()
+  trackEvent('page_view')
 
   // Initialiser AOS si disponible
   if (typeof AOS !== 'undefined') {
