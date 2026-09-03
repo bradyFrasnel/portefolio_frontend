@@ -59,7 +59,6 @@
           <h3 class="text-xl font-semibold text-emerald mb-4">{{ $t('footer.info') }}</h3>
           <div class="space-y-2 text-gray-600 dark:text-gray-custom text-sm">
             <p>{{ $t('footer.dev_role') }}</p>
-            <p>{{ $t('footer.specialty') }}</p>
             <p>{{ $t('footer.availability') }}</p>
             <div class="pt-4">
               <p class="text-xs text-gray-500">{{ $t('footer.copyright') }}</p>
@@ -71,7 +70,7 @@
       <!-- mon Gabon-->
       <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 text-center">
         <p class="text-lg md:text-xl font-medium italic text-emerald">
-          "C'est enfin notre essor vers la félicité !!"
+          C'est enfin notre essor vers la félicité !!
         </p>
       </div>
     </div>

@@ -456,6 +456,8 @@
         </div>
       </div>
     </div>
+    
+    <Footer />
   </div>
 </template>
 
@@ -466,6 +468,7 @@ import { Moon, Sun, Menu, X, Monitor, Bot, Wrench, Code, Target, Atom, Palette, 
 import { trackEvent } from '../utils/analytics.js'
 import api from '../services/api.js'
 import { parseProjectsResponse } from '../utils/projects.js'
+import Footer from '../components/Footer.vue'
 
 const { t, locale } = useI18n()
 
