@@ -36,7 +36,7 @@
               <span class="text-lg flex justify-center"><Github :size="24" /></span>
             </a>
             <a 
-              href="https://linkedin.com/in/brady-frasnel" 
+              href="https://www.linkedin.com/in/brady-mokuma-9745813a8?utm_source=share_via&utm_content=profile&utm_medium=member_ios" 
               target="_blank"
               class="w-10 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors"
               title="LinkedIn"
@@ -44,7 +44,7 @@
               <span class="text-lg flex justify-center"><Linkedin :size="24" /></span>
             </a>
             <a 
-              href="https://wa.me/24107414594949" 
+              href="https://wa.me/24174145949" 
               target="_blank"
               class="w-10 h-10 bg-green-600 text-white rounded-lg flex items-center justify-center hover:bg-green-700 transition-colors"
               title="WhatsApp"

@@ -336,7 +336,7 @@
             <h3 class="text-xl font-semibold mb-3 text-emerald">LinkedIn</h3>
             <p class="text-gray-600 dark:text-gray-custom mb-4">{{ $t('identifiants.linkedin_desc') }}</p>
             <a 
-              href="https://linkedin.com/in/brady-frasnel" 
+              href="https://www.linkedin.com/in/brady-mokuma-9745813a8?utm_source=share_via&utm_content=profile&utm_medium=member_ios" 
               target="_blank"
               class="inline-flex items-center gap-2 bg-emerald text-obsidian px-4 sm:px-6 py-2 text-sm sm:text-base rounded-lg hover:bg-neon-lime transition-all font-semibold"
             >
@@ -365,7 +365,7 @@
             <h3 class="text-xl font-semibold mb-3 text-emerald">WhatsApp</h3>
             <p class="text-gray-600 dark:text-gray-custom mb-4">{{ $t('identifiants.whatsapp_desc') }}</p>
             <a 
-              href="https://wa.me/33XXXXXXXXX" 
+              href="https://wa.me/24174145949" 
               target="_blank"
               class="inline-flex items-center gap-2 bg-emerald text-obsidian px-4 sm:px-6 py-2 text-sm sm:text-base rounded-lg hover:bg-neon-lime transition-all font-semibold"
             >
