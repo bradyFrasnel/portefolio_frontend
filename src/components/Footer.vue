@@ -68,7 +68,7 @@
         </div>
       </div>
 
-      <!-- Slogan de mon Gabon-->
+      <!-- mon Gabon-->
       <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 text-center">
         <p class="text-lg md:text-xl font-medium italic text-emerald">
           "C'est enfin notre essor vers la félicité !!"
