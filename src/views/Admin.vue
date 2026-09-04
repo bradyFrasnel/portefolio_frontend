@@ -1,9 +1,30 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white p-4 sm:p-8 flex flex-col relative">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex flex-col relative">
     
+    <!-- App Bar -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center gap-4">
+            <router-link to="/" class="text-gray-500 hover:text-emerald-500 transition-colors" title="Retour au site">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            </router-link>
+            <h1 class="text-xl font-bold text-emerald-500">Administration</h1>
+          </div>
+          <button 
+            v-if="isLoggedIn" 
+            @click="logout" 
+            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition duration-200 shadow-sm"
+          >
+            Déconnexion
+          </button>
+        </div>
+      </div>
+    </header>
+
     <!-- Toast Notification -->
     <div v-if="toast.show" 
-         :class="['fixed top-4 right-4 z-[60] px-6 py-3 rounded-xl shadow-lg transition-all transform', 
+         :class="['fixed top-20 right-4 z-[60] px-6 py-3 rounded-xl shadow-lg transition-all transform', 
                   toast.type === 'success' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white']">
       {{ toast.message }}
     </div>
@@ -20,16 +41,7 @@
       </div>
     </div>
 
-    <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col justify-center">
-      <div class="flex justify-end mb-6">
-        <button 
-          v-if="isLoggedIn" 
-          @click="logout" 
-          class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-full text-xs font-semibold transition duration-200 shadow-sm shadow-black/20"
-        >
-          Déconnexion
-        </button>
-      </div>
+    <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 flex flex-col justify-start">
 
       <!-- Connexion -->
       <div v-if="!isLoggedIn" class="bg-gray-200 dark:bg-gray-800 rounded-3xl p-6 md:p-8 mb-8 w-full max-w-sm mx-auto shadow-xl shadow-black/20 border border-white/10">
@@ -418,7 +430,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
