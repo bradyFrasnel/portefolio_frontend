@@ -152,40 +152,82 @@
         </div>
 
         <!-- Grille de projets -->
-        <div v-else class="flex flex-wrap justify-center gap-8">
+
+
+        
+        <div v-else class="flex overflow-x-auto gap-4 sm:gap-6 pb-6 sm:pb-10 px-1 sm:px-2 scroll-smooth custom-carousel">
           <div 
             v-for="project in filteredProjects" 
-            :key="project.id"
-            class="project-card bg-white dark:bg-dark-jungle p-6 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-emerald transition-all cursor-pointer w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] max-w-sm flex-grow-0"
+            :key="project.id" 
+            class="flex-none w-[260px] sm:w-80 h-[360px] sm:h-[450px] relative rounded-2xl sm:rounded-[2rem] overflow-hidden group shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-emerald-500/10 border border-white/5 bg-gray-200 dark:bg-gray-800 cursor-pointer"
             @click="showProjectDetail(project)"
             data-aos="fade-up"
           >
-            <!-- Miniature image -->
-            <div class="w-full h-32 sm:h-40 md:h-48 rounded-lg mb-4 overflow-hidden bg-gray-200 dark:bg-gray-800 relative">
-              <img 
-                v-if="project.image_url"
-                :src="project.image_url" 
-                :alt="project.project_name"
-                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                @error="(e) => e.target.style.display = 'none'"
-              >
-              <!-- Placeholder CSS quand pas d'image (aucune dépendance externe) -->
-              <div 
-                v-if="!project.image_url"
-                class="w-full h-full flex flex-col items-center justify-center gap-2 project-placeholder"
-              >
-                <Monitor :size="48" class="opacity-60 text-gray-500 dark:text-gray-400" />
-                <span class="text-xs text-gray-500 font-medium uppercase tracking-widest">{{ project.project_name.charAt(0) }}</span>
+            <!-- Image de fond -->
+            <img 
+              v-if="project.image_url"
+              :src="project.image_url" 
+              :alt="project.project_name" 
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-60 group-hover:opacity-80"
+              @error="(e) => e.target.style.display = 'none'"
+            >
+            
+            <!-- Placeholder quand pas d'image -->
+            <div 
+              v-if="!project.image_url"
+              class="absolute inset-0 w-full h-full flex flex-col items-center justify-center gap-2"
+            >
+              <Monitor :size="48" class="opacity-60 text-gray-500 dark:text-gray-400" />
+              <span class="text-xs text-gray-500 font-medium uppercase tracking-widest">{{ project.project_name.charAt(0) }}</span>
+            </div>
+            
+            <!-- Overlay dégradé -->
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/40 to-transparent"></div>
+            
+            <!-- Contenu -->
+            <div class="absolute inset-x-0 bottom-0 p-6 sm:p-8 pt-20">
+              <h3 class="text-xl sm:text-2xl font-black text-white drop-shadow-lg mb-2 line-clamp-2 break-all">
+                {{ project.project_name }}
+              </h3>
+              <p class="text-sm text-gray-400 line-clamp-2 group-hover:line-clamp-none transition-all duration-500 mb-4 font-medium">
+                {{ project.project_description }}
+              </p>
+              
+              <!-- Technologies -->
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                <span v-for="tech in project.technologies_details" :key="tech.id"
+                      class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded-full text-xs font-medium">
+                  {{ tech.nom }}
+                </span>
+              </div>
+              
+              <!-- Actions au hover -->
+              <div class="flex gap-3 translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
+                <a 
+                  v-if="project.github_link"
+                  :href="project.github_link"
+                  target="_blank"
+                  @click.stop
+                  class="flex-1 bg-white text-gray-900 py-2 rounded-xl font-bold text-sm text-center transition-all hover:bg-emerald-500 hover:text-white shadow-xl active:scale-95"
+                >
+                  GitHub
+                </a>
+                <a 
+                  v-if="project.demo_link"
+                  :href="project.demo_link"
+                  target="_blank"
+                  @click.stop
+                  class="flex-1 border border-white/30 text-white py-2 rounded-xl font-bold text-sm text-center transition-all hover:bg-emerald-500 hover:border-emerald-500 shadow-xl active:scale-95"
+                >
+                  Démo
+                </a>
               </div>
             </div>
-            <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-off-white">{{ project.project_name }}</h3>
-            <p class="text-gray-600 dark:text-gray-custom mb-4 line-clamp-2">{{ project.project_description }}</p>
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span v-for="tech in project.technologies_details" :key="tech.id"
-                    class="px-3 py-1 bg-emerald/20 text-emerald rounded-full text-sm">
-                {{ tech.nom }}
-              </span>
-            </div>
+          </div>
+          
+          <div v-if="filteredProjects.length === 0" class="flex-none w-[260px] sm:w-80 h-[360px] sm:h-[450px] rounded-2xl sm:rounded-[2rem] border-2 border-dashed border-gray-300 dark:border-gray-700/50 flex flex-col items-center justify-center text-gray-500 italic bg-gray-200 dark:bg-gray-800/10">
+            <Frown class="mb-6 opacity-30 grayscale" :size="64" />
+            <span class="font-bold tracking-widest text-xs uppercase">Aucun projet</span>
           </div>
         </div>
       </div>
@@ -621,13 +663,24 @@ onMounted(() => {
   background: linear-gradient(135deg, #1a2e2a 0%, #0f1f1b 100%);
 }
 
-/* Carte projet */
-.project-card {
-  transition: all 0.3s ease;
+/* Scrollbar stylisée pour le carrousel */
+.custom-carousel {
+  scrollbar-width: thin;
+  scrollbar-color: #10b981 #1f2937;
 }
-.project-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.12);
+
+.custom-carousel::-webkit-scrollbar {
+  height: 6px;
+}
+
+.custom-carousel::-webkit-scrollbar-track {
+  background: #1f2937;
+  border-radius: 10px;
+}
+
+.custom-carousel::-webkit-scrollbar-thumb {
+  background-color: #10b981;
+  border-radius: 10px;
 }
 
 /* Line-clamp pour la description */
