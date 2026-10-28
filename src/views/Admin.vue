@@ -435,7 +435,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { PieChart, BarChart, LineChart } from 'echarts/charts'
@@ -664,6 +664,7 @@ export default {
           await loadProjects()
           await loadTechnologies()
           await loadAnalytics()
+          resetInactivityTimer()
         } else {
           error.value = response.data.message || 'Erreur de connexion'
         }
@@ -851,6 +852,21 @@ export default {
       window.open('https://portefolio-backend-v0e0.onrender.com/docs/', '_blank')
     }
 
+    // Gestion déconnexion automatique après 15 minutes d'inactivité
+    const INACTIVITY_TIMEOUT = 15 * 60 * 1000 // 15 minutes
+    let inactivityTimer = null
+    const activityEvents = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart']
+
+    const resetInactivityTimer = () => {
+      if (inactivityTimer) clearTimeout(inactivityTimer)
+      if (isLoggedIn.value) {
+        inactivityTimer = setTimeout(() => {
+          logout()
+          showToast('Session expirée suite à 15 minutes d\'inactivité.', 'error')
+        }, INACTIVITY_TIMEOUT)
+      }
+    }
+
     onMounted(() => {
       // Vérifier si un token existe déjà
       const token = localStorage.getItem('authToken')
@@ -859,7 +875,20 @@ export default {
         loadProjects()
         loadTechnologies()
         loadAnalytics()
+        resetInactivityTimer()
       }
+
+      // Écoute des activités utilisateur
+      activityEvents.forEach(event => {
+        window.addEventListener(event, resetInactivityTimer, { passive: true })
+      })
+    })
+
+    onUnmounted(() => {
+      if (inactivityTimer) clearTimeout(inactivityTimer)
+      activityEvents.forEach(event => {
+        window.removeEventListener(event, resetInactivityTimer)
+      })
     })
 
     return {
