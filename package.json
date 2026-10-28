@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "aos": "^2.3.4",
-    "axios": "^1.13.5",
+    "axios": "^1.21.0",
     "echarts": "^6.1.0",
     "lucide-vue-next": "^0.475.0",
     "vue": "^3.4.0",
